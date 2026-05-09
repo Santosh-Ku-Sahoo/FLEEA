@@ -1,0 +1,18 @@
+# FLEEA
+# Ignore .env, database files, venv, logs, and IDE files
+
+.env
+*.db
+database/fleea.db
+database/chroma_store/
+logs/*.db
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.idea/
+.vscode/
+*.egg-info/
+dist/
+build/

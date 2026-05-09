@@ -1,0 +1,47 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# FLEEA Dependencies — Phase 1: Core Brain
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# LLM Provider
+anthropic>=0.40.0
+
+# Async HTTP (Tavily search)
+httpx>=0.27.0
+
+# Configuration
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+python-dotenv>=1.0.0
+
+# Terminal UX
+rich>=13.7.0
+
+# Retry logic
+tenacity>=8.3.0
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Phase 2: Memory System
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Vector database (persistent, local)
+chromadb>=0.5.0
+
+# Embedding model (all-MiniLM-L6-v2, 384-dim, CPU-friendly)
+sentence-transformers>=3.0.0
+
+# Web UI
+streamlit>=1.35.0
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Phase 3: Voice Interface
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Speech-to-text (CTranslate2-backed Whisper)
+faster-whisper>=1.0.0
+
+# Audio capture from microphone
+sounddevice>=0.4.6
+numpy>=1.24.0
+
+# Text-to-speech (offline, OS-native voices)
+pyttsx3>=2.90

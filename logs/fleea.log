@@ -1,0 +1,633 @@
+2026-05-06 23:51:33  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-06 23:51:33  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-06 23:51:34  fleea.brain             INFO      Brain initialized: model=claude-sonnet-4-20250514  max_tokens=4096  tools=['web_search']  memory=True  retriever=True  profile=True  vector=True
+2026-05-06 23:51:34  fleea.session           INFO      Session created: e6ecb66a
+2026-05-06 23:51:50  fleea.memory.vector_store  INFO      ChromaDB ready: collection=fleea_memory  count=0  path=C:\Users\asus\OneDrive\Documents\FLEEA\memory\chroma_db
+2026-05-06 23:52:09  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-06 23:52:09  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-06 23:52:10  fleea.brain             INFO      Brain initialized: model=claude-sonnet-4-20250514  max_tokens=4096  tools=['web_search']  memory=True  retriever=True  profile=True  vector=True
+2026-05-06 23:52:10  fleea.session           INFO      Session created: 93303693
+2026-05-06 23:52:10  fleea.memory.vector_store  INFO      ChromaDB ready: collection=fleea_memory  count=0  path=C:\Users\asus\OneDrive\Documents\FLEEA\memory\chroma_db
+2026-05-06 23:53:04  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-06 23:53:04  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-06 23:53:05  fleea.brain             INFO      Brain initialized: model=claude-sonnet-4-20250514  max_tokens=4096  tools=['web_search']  memory=True  retriever=True  profile=True  vector=True
+2026-05-06 23:53:05  fleea.session           INFO      Session created: f9dfc647
+2026-05-06 23:53:06  fleea.memory.vector_store  INFO      ChromaDB ready: collection=fleea_memory  count=0  path=C:\Users\asus\OneDrive\Documents\FLEEA\memory\chroma_db
+2026-05-06 23:54:05  fleea.brain             INFO      Conversation history cleared
+2026-05-06 23:54:05  fleea.memory.short_term  INFO      Short-term memory cleared: removed 0 messages (lifetime: 0 added, 0 trimmed)
+2026-05-06 23:54:06  fleea.memory.vector_store  INFO      ChromaDB ready: collection=fleea_memory  count=0  path=C:\Users\asus\OneDrive\Documents\FLEEA\memory\chroma_db
+2026-05-06 23:55:10  fleea.memory.vector_store  INFO      Embedding model loaded: all-MiniLM-L6-v2  (12206ms)
+2026-05-06 23:55:11  fleea.memory.vector_store  INFO      Embedding model loaded: all-MiniLM-L6-v2  (12686ms)
+2026-05-06 23:55:11  fleea.memory.vector_store  INFO      Embedding model loaded: all-MiniLM-L6-v2  (12687ms)
+2026-05-06 23:55:12  fleea.memory.vector_store  INFO      Embedding model loaded: all-MiniLM-L6-v2  (13486ms)
+2026-05-06 23:55:35  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-06 23:55:35  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-06 23:55:35  fleea.brain             INFO      Brain initialized: model=claude-sonnet-4-20250514  max_tokens=4096  tools=['web_search']  memory=True  retriever=True  profile=True  vector=True
+2026-05-06 23:55:35  fleea.session           INFO      Session created: 8cd9c62a
+2026-05-06 23:55:36  fleea.memory.vector_store  INFO      ChromaDB ready: collection=fleea_memory  count=0  path=C:\Users\asus\OneDrive\Documents\FLEEA\memory\chroma_db
+2026-05-06 23:55:44  fleea.memory.vector_store  INFO      Embedding model loaded: all-MiniLM-L6-v2  (8098ms)
+2026-05-09 19:39:42  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-09 19:39:42  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-09 19:39:42  fleea.session           INFO      Session created: 34f3d3f1
+2026-05-09 19:39:43  fleea.brain             INFO      Brain initialized: model=claude-sonnet-4-20250514  max_tokens=4096  tools=['web_search']  memory=False  retriever=False  profile=False  vector=False
+2026-05-09 19:39:43  fleea.planner           INFO      Planning goal [18d93d90]: Search for the top 3 AI trends in 2025 and summarize the findings
+2026-05-09 19:39:43  fleea.planner           WARNING   Plan generation failed (KeyError), falling back to single step: '"instruction"'
+2026-05-09 19:39:43  fleea.planner           INFO      Plan created [18d93d90]: 3 steps
+2026-05-09 19:39:59  fleea.task_manager      INFO      Saved plan: goal=18d93d90  steps=3
+2026-05-09 19:40:41  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-09 19:40:41  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-09 19:40:41  fleea.session           INFO      Session created: b889f4f4
+2026-05-09 19:40:42  fleea.brain             INFO      Brain initialized: model=claude-sonnet-4-20250514  max_tokens=4096  tools=['web_search']  memory=False  retriever=False  profile=False  vector=False
+2026-05-09 19:40:43  fleea.planner           INFO      Planning goal [862fc7cc]: Search for the top 3 AI trends in 2025 and summarize the findings
+2026-05-09 19:40:43  fleea.planner           WARNING   Plan generation failed (KeyError), falling back to single step: '"instruction"'
+2026-05-09 19:40:43  fleea.planner           INFO      Plan created [862fc7cc]: 3 steps
+2026-05-09 19:40:58  fleea.task_manager      INFO      Saved plan: goal=862fc7cc  steps=3
+2026-05-09 19:40:58  fleea.executor          INFO      Executing step 1 [7dae55a4] (attempt 1/3): Understand and clarify the goal: Search for the top 3 AI trends in 2025 and summ
+2026-05-09 19:40:59  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8V72hYfUvdiD2GfvYw'}
+2026-05-09 19:40:59  fleea.executor          WARNING   Step 1 [7dae55a4] got error response (attempt 1): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:40:59  fleea.executor          INFO      Executing step 1 [7dae55a4] (attempt 2/3): Understand and clarify the goal: Search for the top 3 AI trends in 2025 and summ
+2026-05-09 19:40:59  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8V9srB4fMsWiqvjZDh'}
+2026-05-09 19:40:59  fleea.executor          WARNING   Step 1 [7dae55a4] got error response (attempt 2): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:40:59  fleea.executor          INFO      Executing step 1 [7dae55a4] (attempt 3/3): Understand and clarify the goal: Search for the top 3 AI trends in 2025 and summ
+2026-05-09 19:41:00  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8VDuwWhSu3sf8jeZAo'}
+2026-05-09 19:41:00  fleea.executor          WARNING   Step 1 [7dae55a4] got error response (attempt 3): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:00  fleea.task_manager      WARNING   Step 7dae55a4 → FAILED: Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:15  fleea.executor          INFO      Executing step 2 [1f52eeeb] (attempt 1/3): Execute the core action: Search for the top 3 AI trends in 2025 and summarize th
+2026-05-09 19:41:19  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8WbuJcX8mVvpSEJPzt'}
+2026-05-09 19:41:19  fleea.executor          WARNING   Step 2 [1f52eeeb] got error response (attempt 1): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:19  fleea.executor          INFO      Executing step 2 [1f52eeeb] (attempt 2/3): Execute the core action: Search for the top 3 AI trends in 2025 and summarize th
+2026-05-09 19:41:20  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8WevsRyndETtbQwb4U'}
+2026-05-09 19:41:20  fleea.executor          WARNING   Step 2 [1f52eeeb] got error response (attempt 2): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:20  fleea.executor          INFO      Executing step 2 [1f52eeeb] (attempt 3/3): Execute the core action: Search for the top 3 AI trends in 2025 and summarize th
+2026-05-09 19:41:21  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8WkVytrcvur6PR6YGc'}
+2026-05-09 19:41:21  fleea.executor          WARNING   Step 2 [1f52eeeb] got error response (attempt 3): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:21  fleea.task_manager      WARNING   Step 1f52eeeb → FAILED: Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:35  fleea.executor          INFO      Executing step 3 [ae996955] (attempt 1/3): Summarize the results and key findings
+2026-05-09 19:41:36  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8Xpe3fcDXCAFz4ej2G'}
+2026-05-09 19:41:36  fleea.executor          WARNING   Step 3 [ae996955] got error response (attempt 1): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:36  fleea.executor          INFO      Executing step 3 [ae996955] (attempt 2/3): Summarize the results and key findings
+2026-05-09 19:41:38  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8Y2XupyFhSCQEP6xtX'}
+2026-05-09 19:41:38  fleea.executor          WARNING   Step 3 [ae996955] got error response (attempt 2): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:38  fleea.executor          INFO      Executing step 3 [ae996955] (attempt 3/3): Summarize the results and key findings
+2026-05-09 19:41:39  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cas8Y4uYErUSTgDKQzSsS'}
+2026-05-09 19:41:39  fleea.executor          WARNING   Step 3 [ae996955] got error response (attempt 3): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:39  fleea.task_manager      WARNING   Step ae996955 → FAILED: Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:41:53  fleea.session           INFO      Session ended: b889f4f4 | 1m 11s | 9 interactions
+2026-05-09 19:47:15  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-09 19:47:15  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-09 19:47:15  fleea.session           INFO      Session created: 1e10653f
+2026-05-09 19:47:16  fleea.brain             INFO      Brain initialized: model=claude-sonnet-4-20250514  max_tokens=4096  tools=['web_search']  memory=False  retriever=False  profile=False  vector=False
+2026-05-09 19:47:16  fleea.planner           INFO      Planning goal [b7bc5f42]: Search for the top 3 AI trends in 2025 and summarize the findings
+2026-05-09 19:47:16  fleea.planner           WARNING   Plan generation failed (KeyError), falling back to single step: '"instruction"'
+2026-05-09 19:47:16  fleea.planner           INFO      Plan created [b7bc5f42]: 3 steps
+2026-05-09 19:47:32  fleea.task_manager      INFO      Saved plan: goal=b7bc5f42  steps=3
+2026-05-09 19:47:32  fleea.executor          INFO      Executing step 1 [1d2ea29d] (attempt 1/3): Understand and clarify the goal: Search for the top 3 AI trends in 2025 and summ
+2026-05-09 19:47:35  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Cas8zCLFNQjsLo9DRSA2p'}
+2026-05-09 19:47:35  fleea.executor          WARNING   Step 1 [1d2ea29d] got error response (attempt 1): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:47:35  fleea.executor          INFO      Executing step 1 [1d2ea29d] (attempt 2/3): Understand and clarify the goal: Search for the top 3 AI trends in 2025 and summ
+2026-05-09 19:47:35  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Cas8zLHygUPZzumjp4oMP'}
+2026-05-09 19:47:35  fleea.executor          WARNING   Step 1 [1d2ea29d] got error response (attempt 2): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:47:35  fleea.executor          INFO      Executing step 1 [1d2ea29d] (attempt 3/3): Understand and clarify the goal: Search for the top 3 AI trends in 2025 and summ
+2026-05-09 19:47:37  fleea.brain             ERROR     Unhandled error in agentic loop
+Traceback (most recent call last):
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 209, in think
+    response_text, tools_invoked, total_usage = await self._agentic_loop(
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 314, in _agentic_loop
+    response = await self._call_claude_api()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 531, in _call_claude_api
+    return await loop.run_in_executor(None, self._create_message)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\agent\brain.py", line 582, in _create_message
+    return retryer(self._client.messages.create, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 393, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_utils\_utils.py", line 268, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\resources\messages\messages.py", line 991, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1368, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\asus\OneDrive\Documents\FLEEA\venv\Lib\site-packages\anthropic\_base_client.py", line 1141, in request
+    raise self._make_status_error_from_response(err.response) from None
+anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011Cas8zQVzBxjfuPQxodhtF'}
+2026-05-09 19:47:37  fleea.executor          WARNING   Step 1 [1d2ea29d] got error response (attempt 3): Brain returned error response: I encountered an unexpected error while processing your request. Plea
+2026-05-09 19:47:37  fleea.task_manager      WARNING   Step 1d2ea29d → FAILED: Brain returned error response: I encountered an unexpected error while processing your request. Plea
