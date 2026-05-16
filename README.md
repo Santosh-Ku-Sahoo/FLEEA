@@ -38,7 +38,7 @@ FLEEA is a modular, desktop-based AI agent built with a **production-grade archi
 
 ```text
 ┌──────────────────────── Interfaces ─────────────────────────────┐
-│  app.py (CLI REPL)         voice_ui_server.py (Flask+SocketIO) │
+│  cli.py (CLI REPL)         voice_ui_server.py (Flask+SocketIO) │
 │  voice_interface.py        web/ (React 19 + Vite 8 + Tailwind) │
 └──────────────────────────────┬──────────────────────────────────┘
                                │  SocketIO (bidirectional)
@@ -140,7 +140,8 @@ FLEEA/
 │
 ├── tests/                       # Test suite
 ├── logs/                        # Rotating log files
-├── app.py                       # CLI REPL entry point
+├── app.py                       # WSGI / Vercel entry point (Flask)
+├── cli.py                       # CLI REPL entry point
 ├── requirements.txt             # Python dependencies
 └── .env                         # API keys (never committed)
 ```
@@ -225,7 +226,7 @@ Open the dashboard URL in your browser. You'll see the **Neural Auth** login scr
 #### 💻 Terminal (CLI REPL)
 
 ```bash
-python app.py
+python cli.py
 ```
 
 #### 🎤 Voice Mode (Headless)
