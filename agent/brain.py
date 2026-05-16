@@ -11,9 +11,9 @@ Architecture:
 
     Every dependency is injected via the constructor — no globals, no
     singletons.  Memory subsystems are optional: if not provided the
-    brain operates in Phase 1 mode with no degradation.
+    brain operates in a core mode with no degradation.
 
-Phase 2 memory integration:
+Memory integration:
     BEFORE LLM call:
         - Retrieve relevant long-term memories via MemoryRetriever
         - Retrieve user profile via ProfileManager
@@ -54,7 +54,9 @@ import re
 import time
 from typing import Any
 
-import anthropic
+from google import genai
+# pyrefly: ignore [missing-import]
+from google.genai import types
 from tenacity import (
     Retrying,
     retry_if_exception_type,
@@ -69,7 +71,7 @@ from config.prompts import build_system_prompt
 from config.settings import Settings
 from tools.tool_registry import ToolRegistry
 
-# Phase 2 memory imports — guarded so brain works without them
+# Memory imports — guarded so brain works without them
 try:
     from memory.short_term import ShortTermMemory
     from memory.retriever import MemoryRetriever
@@ -118,11 +120,8 @@ class FLEEABrain:
         profile_manager: Any | None = None,
         vector_store: Any | None = None,
     ) -> None:
-        # ── Claude API client ─────────────────────────────────────
-        self._client = anthropic.Anthropic(
-            api_key=settings.ANTHROPIC_API_KEY,
-            timeout=settings.API_TIMEOUT_SECONDS,
-        )
+        # ── Gemini API client ─────────────────────────────────────
+        self._client = genai.Client(api_key=settings.GOOGLE_API_KEY)
         self._model = settings.DEFAULT_MODEL
         self._max_tokens = settings.MAX_RESPONSE_TOKENS
 
@@ -144,7 +143,7 @@ class FLEEABrain:
         self._safety = safety
         self._session = session_manager
 
-        # ── Phase 2: Memory subsystems (graceful if absent) ───────
+        # ── Memory subsystems (graceful if absent) ───────
         self._short_term = short_term_memory
         self._retriever = memory_retriever
         self._profile_mgr = profile_manager
@@ -199,7 +198,9 @@ class FLEEABrain:
         self._system_prompt = self._build_dynamic_prompt(user_message)
 
         # Append user message to conversation history
-        self._messages.append({"role": "user", "content": user_message})
+        self._messages.append(
+            types.Content(role="user", parts=[types.Part.from_text(text=user_message)])
+        )
 
         # ── Run the agentic loop ──────────────────────────────────
         tools_invoked: list[str] = []
@@ -220,13 +221,26 @@ class FLEEABrain:
                 error_type=type(exc).__name__,
             )
 
-            response_text = (
-                "I encountered an unexpected error while processing your request. "
-                "Please try again, or rephrase your question."
-            )
+            if "429" in error_msg or "quota" in error_msg.lower():
+                response_text = (
+                    "It seems my API quota has been exceeded or I am being rate-limited. "
+                    "Please check your Google Gemini API billing or wait a moment."
+                )
+            elif "404" in error_msg or "not found" in error_msg.lower():
+                response_text = (
+                    "I am having trouble connecting to the configured Gemini model. "
+                    "Please check that the model name in your settings is valid."
+                )
+            else:
+                response_text = (
+                    "I encountered an unexpected error while processing your request. "
+                    "Please try again, or rephrase your question."
+                )
 
-        # ── Append assistant response to history ──────────────────
-        self._messages.append({"role": "assistant", "content": response_text})
+        # ── Append assistant response to history ──────────────────────
+        self._messages.append(
+            types.Content(role="model", parts=[types.Part.from_text(text=response_text)])
+        )
 
         # ── POST-LLM: Memory storage ──────────────────────────────
         self._post_response_memory(user_message, response_text, session_id)
@@ -291,9 +305,9 @@ class FLEEABrain:
         user_input: str,
     ) -> tuple[str, list[str], TokenUsage]:
         """
-        The core loop: call Claude → handle tool use → repeat.
+        The core loop: call Gemini → handle function calls → repeat.
 
-        Runs until Claude returns a final text response (stop_reason=end_turn)
+        Runs until Gemini returns a final text response (no function_calls)
         or the iteration ceiling is hit.
 
         Returns:
@@ -303,54 +317,45 @@ class FLEEABrain:
         cumulative_usage = TokenUsage()
         iteration = 0
 
+        # ── Trim history once before starting the agentic turn ─────
+        # Stay within context budget while preserving Gemini's turn-based rules.
+        self._trim_history()
+
         while iteration < self._max_tool_iterations:
             iteration += 1
             _log.debug("Agentic loop iteration %d/%d", iteration, self._max_tool_iterations)
 
-            # ── Trim history to stay within context budget ─────────
-            self._trim_history()
-
-            # ── Call Claude ────────────────────────────────────────
-            response = await self._call_claude_api()
+            # ── Call Gemini ────────────────────────────────────────
+            response = await self._call_gemini_api()
 
             # ── Track token usage ─────────────────────────────────
             usage = self._logger.extract_usage(response)
             self._logger.track_api_usage(session_id, usage)
             cumulative_usage = _accumulate_usage(cumulative_usage, usage)
 
-            # ── Check stop reason ─────────────────────────────────
-            stop_reason = response.stop_reason
+            # ── Check for function calls ──────────────────────────
+            fn_calls = response.function_calls
 
-            if stop_reason == "end_turn":
-                # Claude is done — extract final text
+            if not fn_calls:
+                # Gemini is done — extract final text
                 return _extract_text(response), tools_invoked, cumulative_usage
 
-            if stop_reason == "tool_use":
-                # Claude wants to use one or more tools
-                tool_result_blocks, invoked = await self._handle_tool_calls(
-                    response, session_id, user_input, usage,
-                )
-                tools_invoked.extend(invoked)
+            # Gemini wants to use one or more tools
+            fn_response_parts, invoked = await self._handle_tool_calls(
+                fn_calls, session_id, user_input, usage,
+            )
+            tools_invoked.extend(invoked)
 
-                # Append the assistant's response (with tool_use blocks)
-                self._messages.append({
-                    "role": "assistant",
-                    "content": response.content,
-                })
+            # Append the model's response (with function_call parts)
+            self._messages.append(response.candidates[0].content)
 
-                # Append tool results so Claude can process them
-                self._messages.append({
-                    "role": "user",
-                    "content": tool_result_blocks,
-                })
+            # Append tool results as a "user" turn with function_response parts
+            self._messages.append(
+                types.Content(role="user", parts=fn_response_parts)
+            )
 
-                # Loop back — Claude will now process the tool results
-                continue
-
-            # ── Unexpected stop reason ─────────────────────────────
-            # max_tokens, stop_sequence, etc.  Return whatever we have.
-            _log.warning("Unexpected stop_reason: %s", stop_reason)
-            return _extract_text(response), tools_invoked, cumulative_usage
+            # Loop back — Gemini will now process the tool results
+            continue
 
         # ── Max iterations reached ─────────────────────────────────
         _log.warning(
@@ -371,34 +376,30 @@ class FLEEABrain:
 
     async def _handle_tool_calls(
         self,
-        response: Any,
+        fn_calls: list[Any],
         session_id: str,
         user_input: str,
         usage: TokenUsage,
-    ) -> tuple[list[dict[str, Any]], list[str]]:
+    ) -> tuple[list[Any], list[str]]:
         """
-        Process all tool_use blocks from a single Claude response.
+        Process all function_call objects from a single Gemini response.
 
-        For each tool_use block:
+        For each function_call:
             1. Extract tool name and arguments
             2. Run through safety gate (evaluate_and_gate)
             3. If approved → execute via ToolRegistry
-            4. If denied → return error result to Claude
+            4. If denied → return error result to Gemini
             5. Log the execution (success or denial)
 
         Returns:
-            (tool_result_blocks, list_of_invoked_tool_names)
+            (function_response_parts, list_of_invoked_tool_names)
         """
-        tool_result_blocks: list[dict[str, Any]] = []
+        fn_response_parts: list[Any] = []
         invoked_names: list[str] = []
 
-        for block in response.content:
-            if block.type != "tool_use":
-                continue
-
-            tool_name: str = block.name
-            tool_input: dict[str, Any] = block.input
-            tool_use_id: str = block.id
+        for fc in fn_calls:
+            tool_name: str = fc.name
+            tool_input: dict[str, Any] = dict(fc.args) if fc.args else {}
 
             _log.info("Tool call detected: %s", tool_name)
 
@@ -408,7 +409,6 @@ class FLEEABrain:
             )
 
             if not allowed:
-                # Denied by safety layer — send error back to Claude
                 deny_reason = safety_check.reason
                 _log.warning(
                     "Tool '%s' denied by safety: %s [%s]",
@@ -417,14 +417,13 @@ class FLEEABrain:
                     safety_check.verdict.value,
                 )
 
-                tool_result_blocks.append({
-                    "type": "tool_result",
-                    "tool_use_id": tool_use_id,
-                    "content": f"Tool execution denied by safety system: {deny_reason}",
-                    "is_error": True,
-                })
+                fn_response_parts.append(
+                    types.Part.from_function_response(
+                        name=tool_name,
+                        response={"error": f"Tool execution denied by safety system: {deny_reason}"},
+                    )
+                )
 
-                # Log the denied tool call
                 self._logger.log_tool_execution(
                     session_id=session_id,
                     user_input=user_input,
@@ -452,13 +451,13 @@ class FLEEABrain:
                 timer.duration_ms,
             )
 
-            # Build tool_result block for Claude
-            tool_result_blocks.append({
-                "type": "tool_result",
-                "tool_use_id": tool_use_id,
-                "content": content_str,
-                "is_error": not result.success,
-            })
+            # Build function_response part for Gemini
+            fn_response_parts.append(
+                types.Part.from_function_response(
+                    name=tool_name,
+                    response={"result": content_str} if result.success else {"error": content_str},
+                )
+            )
 
             # Log the execution
             self._logger.log_tool_execution(
@@ -467,17 +466,16 @@ class FLEEABrain:
                 detected_intent=f"tool_call:{tool_name}",
                 selected_tool=tool_name,
                 tool_input=tool_input,
-                tool_result=content_str[:2000],  # Cap log size
+                tool_result=content_str[:2000],
                 success=result.success,
                 error=result.error,
                 execution_duration_ms=timer.duration_ms,
                 usage=usage,
             )
 
-            # Record tool call on session (count only — logger owns cost)
             self._session.record_tool_call()
 
-        return tool_result_blocks, invoked_names
+        return fn_response_parts, invoked_names
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  CONVERSATION HISTORY MANAGEMENT
@@ -487,99 +485,117 @@ class FLEEABrain:
         """
         Trim conversation history to stay within the context budget.
 
-        Keeps the most recent messages up to MAX_CONTEXT_MESSAGES.
-        Always preserves at least the last user message so Claude
-        has something to respond to.
+        Gemini Requirements:
+            1. Must alternate User/Model turns.
+            2. Cannot end on a tool-call turn without a response.
+            3. Trimming must happen in pairs (User + Model) to maintain turn parity.
+
+        Keeps the most recent turns up to MAX_CONTEXT_MESSAGES.
         """
         limit = self._max_context_messages
         if len(self._messages) <= limit:
             return
 
+        # We must trim in even amounts to keep the user/model sequence starting correctly.
+        # However, tool use adds multiple messages (model call -> user response).
+        # To be safe, we calculate how many turns to remove from the front.
+        # Gemini usually expects the first message to be 'user'.
+        
+        # Simple approach: find the first 'user' message after the excess and start there.
         excess = len(self._messages) - limit
-        self._messages = self._messages[excess:]
-        self._trimmed_count += excess
+        
+        # Look for the first 'user' message index at or after 'excess'
+        new_start = excess
+        while new_start < len(self._messages) and self._messages[new_start].role != "user":
+            new_start += 1
+            
+        # If we couldn't find a user message to start with, just keep the last 4 messages as a fallback
+        if new_start >= len(self._messages) - 2:
+            new_start = max(0, len(self._messages) - 4)
+            # Ensure even then we start with 'user'
+            while new_start < len(self._messages) and self._messages[new_start].role != "user":
+                new_start += 1
 
-        _log.info(
-            "Trimmed %d old messages (total trimmed this session: %d, "
-            "remaining: %d)",
-            excess,
-            self._trimmed_count,
-            len(self._messages),
-        )
+        actual_trimmed = new_start
+        if actual_trimmed > 0:
+            self._messages = self._messages[actual_trimmed:]
+            self._trimmed_count += actual_trimmed
+            _log.info(
+                "Trimmed %d messages to maintain context budget. Total session trimmed: %d",
+                actual_trimmed, self._trimmed_count
+            )
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  CLAUDE API CALL (with retry)
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    async def _call_claude_api(self) -> Any:
+    async def _call_gemini_api(self) -> Any:
         """
-        Call the Claude Messages API with retry on transient errors.
+        Call the Gemini API with retry on transient errors.
 
-        The synchronous Anthropic client is run in a thread executor
+        The synchronous genai client is run in a thread executor
         to avoid blocking the async event loop.
-
-        Retries on:
-            - APIConnectionError (network flake)
-            - RateLimitError     (HTTP 429)
-            - InternalServerError (HTTP 5xx)
-
-        Does NOT retry on:
-            - AuthenticationError (bad API key — no point retrying)
-            - BadRequestError    (our fault — fix the request)
         """
         loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self._create_message)
 
     def _create_message(self) -> Any:
         """
-        Synchronous Claude Messages API call — runs in thread executor.
+        Synchronous Gemini API call — runs in thread executor.
 
-        Uses tenacity.Retrying as a context manager so retry parameters
-        (max_retries, backoff bounds) are read from instance attributes
-        set by Settings, not hardcoded at class-definition time.
+        Converts Claude-format tool schemas from the registry into
+        Gemini FunctionDeclarations, then calls generate_content
+        with manual function calling (automatic is disabled so the
+        brain controls the agentic loop).
         """
-        tools = self._registry.get_all_schemas()
+        claude_schemas = self._registry.get_all_schemas()
+        gemini_tools = _convert_tools_for_gemini(claude_schemas) if claude_schemas else None
 
-        kwargs: dict[str, Any] = {
-            "model": self._model,
-            "max_tokens": self._max_tokens,
-            "system": self._system_prompt,
-            "messages": self._messages,
-        }
+        # Build contents: system instruction is separate in Gemini
+        contents = self._messages if self._messages else []
 
-        # Only include tools param if we have tools registered
-        # (Claude rejects an empty tools list)
-        if tools:
-            kwargs["tools"] = tools
+        config = types.GenerateContentConfig(
+            system_instruction=self._system_prompt,
+            max_output_tokens=self._max_tokens,
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+        )
+
+        if gemini_tools:
+            config.tools = gemini_tools
 
         _log.debug(
-            "Calling Claude: model=%s  messages=%d  tools=%d",
+            "Calling Gemini: model=%s  messages=%d  tools=%d",
             self._model,
             len(self._messages),
-            len(tools),
+            len(claude_schemas),
         )
 
         retryer = Retrying(
             retry=retry_if_exception_type((
-                anthropic.APIConnectionError,
-                anthropic.RateLimitError,
-                anthropic.InternalServerError,
+                ConnectionError,
+                TimeoutError,
+                Exception,
             )),
             wait=wait_exponential(
-                multiplier=1,
+                multiplier=2,
                 min=self._retry_min_wait,
-                max=self._retry_max_wait,
+                max=60,  # Max wait of 60s to respect 429 quota delays
             ),
-            stop=stop_after_attempt(1 + self._max_retries),
+            stop=stop_after_attempt(5),  # 5 attempts for longer recovery
             reraise=True,
             before_sleep=lambda rs: _log.warning(
-                "Claude API retry %d: %s",
+                "Gemini API retry %d: %s",
                 rs.attempt_number,
                 rs.outcome.exception() if rs.outcome else "unknown",
             ),
         )
 
-        return retryer(self._client.messages.create, **kwargs)
+        return retryer(
+            self._client.models.generate_content,
+            model=self._model,
+            contents=contents,
+            config=config,
+        )
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  DIAGNOSTICS
@@ -622,7 +638,7 @@ class FLEEABrain:
         return status
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    #  MEMORY INTEGRATION (Phase 2)
+    #  MEMORY INTEGRATION
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     def _build_dynamic_prompt(self, user_message: str) -> str:
@@ -737,17 +753,64 @@ class FLEEABrain:
 
 def _extract_text(response: Any) -> str:
     """
-    Extract text content from a Claude API response.
+    Extract text content from a Gemini API response.
 
-    Claude responses contain a list of content blocks.  This pulls
-    all text blocks and joins them.  Returns a fallback message
+    Uses the response.text shorthand first, falls back to iterating
+    over candidate parts if needed.  Returns a fallback message
     if no text is found.
     """
+    try:
+        if response.text:
+            return response.text
+    except (AttributeError, ValueError):
+        pass
+
+    # Fallback: iterate parts manually
     text_parts: list[str] = []
-    for block in response.content:
-        if hasattr(block, "text"):
-            text_parts.append(block.text)
+    if response.candidates:
+        for part in response.candidates[0].content.parts:
+            if hasattr(part, "text") and part.text:
+                text_parts.append(part.text)
     return "\n".join(text_parts) if text_parts else "I have no response."
+
+
+def _convert_tools_for_gemini(claude_schemas: list[dict[str, Any]]) -> list[Any]:
+    """
+    Convert Claude-format tool schemas to Gemini FunctionDeclarations.
+
+    Claude schema format:
+        {"name": "...", "description": "...", "input_schema": {"type": "object", "properties": {...}}}
+
+    Gemini expects types.Tool wrapping types.FunctionDeclaration objects.
+    """
+    # pyrefly: ignore [missing-import]
+    from google.genai import types as gtypes
+
+    declarations = []
+    for schema in claude_schemas:
+        # Build a clean parameters dict for Gemini
+        input_schema = schema.get("input_schema", {})
+        params = None
+        if input_schema and input_schema.get("properties"):
+            params = {
+                "type": "OBJECT",
+                "properties": {},
+                "required": input_schema.get("required", []),
+            }
+            for prop_name, prop_def in input_schema["properties"].items():
+                json_type = prop_def.get("type", "string").upper()
+                params["properties"][prop_name] = {
+                    "type": json_type,
+                    "description": prop_def.get("description", ""),
+                }
+
+        declarations.append(gtypes.FunctionDeclaration(
+            name=schema["name"],
+            description=schema.get("description", ""),
+            parameters=params,
+        ))
+
+    return [gtypes.Tool(function_declarations=declarations)]
 
 
 def _accumulate_usage(total: TokenUsage, delta: TokenUsage) -> TokenUsage:

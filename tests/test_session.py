@@ -55,63 +55,50 @@ try:
     print("  OK  Session creation: UUID, status, counters")
 
     # ── 3. Record interactions ──
-    sm.record_interaction(tokens=450, cost=0.005, tool_used=True)
+    # Note: SessionManager only tracks interaction counts + tool call counts.
+    # Token/cost tracking is owned by ExecutionLogger (separate concern).
+    sm.record_interaction(tool_used=True)
     assert session.total_interactions == 1
     assert session.total_tool_calls == 1
-    assert session.total_tokens == 450
-    assert abs(session.total_cost - 0.005) < 0.0001
 
-    sm.record_interaction(tokens=200, cost=0.002, tool_used=False)
+    sm.record_interaction(tool_used=False)
     assert session.total_interactions == 2
     assert session.total_tool_calls == 1  # no tool this time
-    assert session.total_tokens == 650
 
-    sm.record_interaction(tokens=300, cost=0.003, tool_used=True)
+    sm.record_interaction(tool_used=True)
     assert session.total_interactions == 3
     assert session.total_tool_calls == 2
-    assert session.total_tokens == 950
     print("  OK  record_interaction: counters updated correctly")
 
     # ── 4. Record extra tool calls ──
-    sm.record_tool_call(tokens=100, cost=0.001)
+    sm.record_tool_call()
     assert session.total_tool_calls == 3
-    assert session.total_tokens == 1050
     print("  OK  record_tool_call: separate tool tracking")
 
-    # ── 5. Update cost ──
-    sm.update_cost(0.002)
-    expected_cost = 0.005 + 0.002 + 0.003 + 0.001 + 0.002
-    assert abs(session.total_cost - expected_cost) < 0.0001
-    print("  OK  update_cost: cost delta applied")
-
-    # ── 6. Activity timestamp updates ──
+    # ── 5. Activity timestamp updates ──
     assert session.last_active is not None
     assert session.last_active >= session.created_at
     print("  OK  last_active: updated on interactions")
 
-    # ── 7. Derived properties ──
+    # ── 6. Derived properties ──
     assert session.duration_seconds >= 0
     assert isinstance(session.duration_display, str)
     assert "s" in session.duration_display  # at least shows seconds
     assert "$" in session.cost_display
-    assert session.avg_tokens_per_interaction > 0
-    avg = session.total_tokens / session.total_interactions
-    assert abs(session.avg_tokens_per_interaction - avg) < 0.1
-    print("  OK  Derived properties: duration, cost_display, avg_tokens")
+    print("  OK  Derived properties: duration, cost_display")
 
-    # ── 8. to_dict() serialization ──
+    # ── 7. to_dict() serialization ──
     data = session.to_dict()
     assert data["session_id"] == session.session_id
     assert data["short_id"] == session.short_id
     assert data["status"] == "active"
     assert data["total_interactions"] == 3
     assert data["total_tool_calls"] == 3
-    assert data["total_tokens"] == 1050
     assert "duration" in data
     assert "avg_tokens_per_interaction" in data
     print("  OK  to_dict: all fields present")
 
-    # ── 9. summary_lines() ──
+    # ── 8. summary_lines() ──
     lines = session.summary_lines()
     assert len(lines) >= 7
     assert any("Session:" in l for l in lines)
@@ -121,15 +108,14 @@ try:
     assert any("Est. cost:" in l for l in lines)
     print("  OK  summary_lines: all 7 lines present")
 
-    # ── 10. flush_to_db ──
+    # ── 9. flush_to_db ──
     sm.flush_to_db()
     db_session = db.get_session(session.session_id)
     assert db_session is not None
     assert db_session["message_count"] == 3
-    assert db_session["total_tokens"] == 1050
     print("  OK  flush_to_db: stats persisted to SQLite")
 
-    # ── 11. End session ──
+    # ── 10. End session ──
     completed = sm.end_session()
     assert completed is not None
     assert completed.status == SessionStatus.ENDED
@@ -143,26 +129,25 @@ try:
     assert db_session["ended_at"] is not None
     print("  OK  end_session: status, timestamp, DB update")
 
-    # ── 12. End session when none active ──
+    # ── 11. End session when none active ──
     result = sm.end_session()
     assert result is None
     print("  OK  end_session (no session): returns None gracefully")
 
-    # ── 13. record_interaction with no active session ──
-    sm.record_interaction(tokens=100, cost=0.001)  # should not crash
-    sm.record_tool_call(tokens=50, cost=0.001)      # should not crash
-    sm.update_cost(0.01)                              # should not crash
-    sm.flush_to_db()                                  # should not crash
+    # ── 12. record_interaction with no active session ──
+    sm.record_interaction()         # should not crash
+    sm.record_tool_call()           # should not crash
+    sm.flush_to_db()                # should not crash
     print("  OK  No-session calls: all degrade gracefully")
 
-    # ── 14. Force-end stale session on create ──
+    # ── 13. Force-end stale session on create ──
     s1 = sm.create_session()
     s2 = sm.create_session()  # should force-end s1
     assert sm.get_current_session() == s2
     assert s1.status == SessionStatus.ENDED
     print("  OK  Force-end stale session on new create")
 
-    # ── 15. get_session_info ──
+    # ── 14. get_session_info ──
     info = sm.get_session_info()
     assert info is not None
     assert info["status"] == "active"
@@ -171,7 +156,7 @@ try:
     assert sm.get_session_info() is None
     print("  OK  get_session_info: dict when active, None when ended")
 
-    # ── 16. get_past_session ──
+    # ── 15. get_past_session ──
     past = sm.get_past_session(completed.session_id)
     assert past is not None
     assert past["session_id"] == completed.session_id

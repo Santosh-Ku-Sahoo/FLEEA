@@ -117,7 +117,7 @@ try:
 
     # 6. Health check final
     health = db.health_check()
-    assert health["schema_version"] == 1
+    assert health["schema_version"] == 2
     assert health["file_size_mb"] > 0
     assert health["table_counts"]["tasks"] == 0
     assert health["table_counts"]["calendar_events"] == 0

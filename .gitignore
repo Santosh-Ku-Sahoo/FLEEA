@@ -1,18 +1,25 @@
-# FLEEA
-# Ignore .env, database files, venv, logs, and IDE files
-
-.env
-*.db
-database/fleea.db
-database/chroma_store/
-logs/*.db
+# Dependencies
 venv/
 .venv/
+node_modules/
+web/node_modules/
+web/dist/
+
+# Python
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
+
+# Databases & Memory
+.env
+*.db
+database/fleea.db
+memory/chroma_db/
+
+# Logs
+logs/
+
+# IDEs
 .idea/
 .vscode/
-*.egg-info/
-dist/
-build/

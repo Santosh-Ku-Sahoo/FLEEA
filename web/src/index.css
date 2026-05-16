@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@theme {
+  --color-idle: #4f8ef7;
+  --color-listening: #00e5ff;
+  --color-thinking: #c77dff;
+  --color-speaking: #00f5a0;
+  --color-error: #ff4757;
+  --color-bg: #050810;
+}
+
+@layer base {
+  :root {
+    --idle: #4f8ef7;
+    --listening: #00e5ff;
+    --thinking: #c77dff;
+    --speaking: #00f5a0;
+    --error: #ff4757;
+    --bg: #050810;
+  }
+  
+  body {
+    @apply bg-bg text-white font-sans antialiased overflow-hidden min-h-screen;
+    user-select: none;
+  }
+}
+
+/* ── 3-D Ring Visualizer Utilities ── */
+@layer utilities {
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  
+  .perspective-900 {
+    perspective: 900px;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    box-sizing: border-box;
+    transform-style: preserve-3d;
+    transition: opacity 0.8s ease-in-out;
+  }
+  .ring-1 {
+    width: 260px; height: 260px;
+    border-color: rgba(0,220,255,0.7) rgba(0,220,255,0.1) rgba(0,220,255,0.4) rgba(0,220,255,0.1);
+    box-shadow: 0 0 16px rgba(0,220,255,0.3), inset 0 0 16px rgba(0,220,255,0.05);
+    animation: spin3d-1 4s linear infinite;
+  }
+  .ring-2 {
+    width: 210px; height: 210px;
+    border-color: rgba(80,140,255,0.8) rgba(80,140,255,0.15) rgba(80,140,255,0.4) rgba(80,140,255,0.15);
+    box-shadow: 0 0 12px rgba(80,140,255,0.35), inset 0 0 12px rgba(80,140,255,0.05);
+    animation: spin3d-2 3s linear infinite reverse;
+  }
+  .ring-3 {
+    width: 162px; height: 162px;
+    border-color: rgba(160,80,255,0.8) rgba(160,80,255,0.15) rgba(160,80,255,0.5) rgba(160,80,255,0.1);
+    box-shadow: 0 0 12px rgba(160,80,255,0.35), inset 0 0 8px rgba(160,80,255,0.05);
+    animation: spin3d-3 2.4s linear infinite;
+  }
+  .ring-4 {
+    width: 116px; height: 116px;
+    border-color: rgba(255,80,160,0.7) rgba(255,80,160,0.1) rgba(255,80,160,0.5) rgba(255,80,160,0.1);
+    box-shadow: 0 0 10px rgba(255,80,160,0.3), inset 0 0 8px rgba(255,80,160,0.05);
+    animation: spin3d-4 1.8s linear infinite reverse;
+  }
+  .ring-5 {
+    width: 72px; height: 72px;
+    border-color: rgba(0,255,180,0.8) rgba(0,255,180,0.2) rgba(0,255,180,0.5) rgba(0,255,180,0.2);
+    box-shadow: 0 0 10px rgba(0,255,180,0.4), inset 0 0 8px rgba(0,255,180,0.08);
+    animation: spin3d-5 1.2s linear infinite;
+  }
+
+  @keyframes spin3d-1 {
+    from { transform: translate(-50%, -50%) rotateX(70deg) rotateZ(0deg); }
+    to   { transform: translate(-50%, -50%) rotateX(70deg) rotateZ(360deg); }
+  }
+  @keyframes spin3d-2 {
+    from { transform: translate(-50%, -50%) rotateX(55deg) rotateY(20deg) rotateZ(0deg); }
+    to   { transform: translate(-50%, -50%) rotateX(55deg) rotateY(20deg) rotateZ(360deg); }
+  }
+  @keyframes spin3d-3 {
+    from { transform: translate(-50%, -50%) rotateX(40deg) rotateY(-15deg) rotateZ(0deg); }
+    to   { transform: translate(-50%, -50%) rotateX(40deg) rotateY(-15deg) rotateZ(360deg); }
+  }
+  @keyframes spin3d-4 {
+    from { transform: translate(-50%, -50%) rotateX(25deg) rotateY(30deg) rotateZ(0deg); }
+    to   { transform: translate(-50%, -50%) rotateX(25deg) rotateY(30deg) rotateZ(360deg); }
+  }
+  @keyframes spin3d-5 {
+    from { transform: translate(-50%, -50%) rotateX(15deg) rotateZ(0deg); }
+    to   { transform: translate(-50%, -50%) rotateX(15deg) rotateZ(360deg); }
+  }
+
+  .core {
+    @apply relative z-20 flex items-center justify-center cursor-pointer;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #00eeff 0%, #0066ff 50%, #000428 100%);
+    box-shadow: 0 0 20px rgba(0,220,255,0.9), 0 0 40px rgba(0,120,255,0.5);
+    animation: core-pulse 1.8s ease-in-out infinite;
+    font-size: 20px;
+    color: white;
+  }
+
+  @keyframes core-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0,220,255,0.9), 0 0 40px rgba(0,120,255,0.5); }
+    50%       { transform: scale(1.3); box-shadow: 0 0 32px rgba(0,220,255,1), 0 0 80px rgba(0,160,255,0.8); }
+  }
+}
+
+/* Speeds, colors, and visibility defined by data-state attribute */
+[data-state="idle"] { --accent: var(--idle); }
+[data-state="listening"] { --accent: var(--listening); }
+[data-state="thinking"] { --accent: var(--thinking); }
+[data-state="speaking"] { --accent: var(--speaking); }
+[data-state="error"] { --accent: var(--error); }
+
+/* Rings are only fully visible when listening, invisible on idle */
+[data-state="idle"] .ring { opacity: 0; }
+[data-state="listening"] .ring { opacity: 1; }
+[data-state="thinking"] .ring { opacity: 0.5; }
+[data-state="speaking"] .ring { opacity: 0.7; }
+
+/* Listening extreme glow */
+[data-state="listening"] .core {
+  background: radial-gradient(circle, #ffffff 0%, #00eeff 40%, #0066ff 80%, #000428 100%);
+  box-shadow: 0 0 40px rgba(0,220,255,1), 0 0 100px rgba(0,160,255,0.9);
+  animation-duration: 0.8s;
+}
+
+/* Animation duration adjustments based on state (from JARVIS snippet) */
+/* Listen: [4s, 3s, 2.4s, 1.8s, 1.2s] */
+[data-state="listening"] .ring-1 { animation-duration: 4s; }
+[data-state="listening"] .ring-2 { animation-duration: 3s; }
+[data-state="listening"] .ring-3 { animation-duration: 2.4s; }
+[data-state="listening"] .ring-4 { animation-duration: 1.8s; }
+[data-state="listening"] .ring-5 { animation-duration: 1.2s; }
+
+/* Think: [1.5s, 1.2s, 1s, 0.8s, 0.5s] */
+[data-state="thinking"] .ring-1 { animation-duration: 1.5s; }
+[data-state="thinking"] .ring-2 { animation-duration: 1.2s; }
+[data-state="thinking"] .ring-3 { animation-duration: 1s; }
+[data-state="thinking"] .ring-4 { animation-duration: 0.8s; }
+[data-state="thinking"] .ring-5 { animation-duration: 0.5s; }
+
+/* Idle / Speak (Fallback) */
+[data-state="speaking"] .ring-1 { animation-duration: 2.5s; }
+[data-state="speaking"] .ring-2 { animation-duration: 2.0s; }
+[data-state="speaking"] .ring-3 { animation-duration: 1.6s; }
+[data-state="speaking"] .ring-4 { animation-duration: 1.2s; }
+[data-state="speaking"] .ring-5 { animation-duration: 0.8s; }
+
+/* Particles */
+@keyframes particle-fly {
+  0%  { opacity: 0.9; transform: translate(var(--dx0),var(--dy0)) scale(1); }
+  100%{ opacity: 0; transform: translate(var(--dx1),var(--dy1)) scale(0); }
+}
+.particle {
+  @apply absolute rounded-full;
+  background: var(--accent);
+  opacity: 0;
+  animation: particle-fly 2s ease-out forwards;
+}
+
+/* Ambient glow */
+.ambient-glow {
+  @apply fixed inset-0 pointer-events-none;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%);
+  transition: background 0.8s;
+}
+
+/* ── Responsive Utilities ── */
+@layer utilities {
+  .sidebar-transition {
+    @apply transition-transform duration-300 ease-in-out;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-white/20;
+}
+
+/* Adjustments for mobile viewports */
+@media (max-width: 768px) {
+  .ring-1 { width: 180px; height: 180px; }
+  .ring-2 { width: 150px; height: 150px; }
+  .ring-3 { width: 120px; height: 120px; }
+  .ring-4 { width: 90px; height: 90px; }
+  .ring-5 { width: 60px; height: 60px; }
+  .core { width: 40px; height: 40px; font-size: 16px; }
+}

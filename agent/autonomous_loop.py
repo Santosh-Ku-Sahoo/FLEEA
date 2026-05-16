@@ -8,7 +8,7 @@ Architecture:
 
     Execution flow:
         1. User provides a high-level goal
-        2. Planner decomposes goal into 3–7 TaskSteps via Claude
+        2. Planner decomposes goal into 3–7 TaskSteps via Gemini
         3. Plan is displayed to user for approval before execution
         4. Each step is executed sequentially through the Executor → Brain
         5. Steps flagged requires_approval pause for user confirmation
@@ -27,7 +27,7 @@ Architecture:
 Design:
     - All dependencies injected via constructor (no globals).
     - Rich terminal output for clear progress visibility.
-    - Reflector uses a lightweight Claude call (~$0.001 per reflection).
+    - Reflector uses a lightweight Gemini call (~$0.001 per reflection).
     - GoalResult dataclass provides structured execution summary.
 
 Usage:
@@ -47,7 +47,8 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-import anthropic
+from google import genai
+from google.genai import types
 from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Confirm
@@ -166,10 +167,7 @@ class _Reflector:
     """
 
     def __init__(self, settings: Settings) -> None:
-        self._client = anthropic.Anthropic(
-            api_key=settings.ANTHROPIC_API_KEY,
-            timeout=settings.API_TIMEOUT_SECONDS,
-        )
+        self._client = genai.Client(api_key=settings.GOOGLE_API_KEY)
         self._model = settings.DEFAULT_MODEL
         self._max_tokens = 256  # reflections are very short
 
@@ -194,17 +192,15 @@ class _Reflector:
         )
 
         try:
-            response = self._client.messages.create(
+            response = self._client.models.generate_content(
                 model=self._model,
-                max_tokens=self._max_tokens,
-                messages=[{"role": "user", "content": prompt}],
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    max_output_tokens=self._max_tokens,
+                ),
             )
 
-            raw = ""
-            for block in response.content:
-                if hasattr(block, "text"):
-                    raw += block.text
-
+            raw = response.text or ""
             return self._parse_reflection(raw.strip())
 
         except Exception as exc:

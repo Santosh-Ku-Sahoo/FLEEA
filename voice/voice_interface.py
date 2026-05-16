@@ -181,7 +181,7 @@ class VoiceInterface:
             model_size=model_size,
             language=language,
         )
-        self._tts = TextToSpeech(rate=175)
+        self._tts = TextToSpeech(rate=145, voice_index=1)
 
         # ── 5. Start session ──────────────────────────────────────
         self._session = self._session_mgr.create_session()
@@ -230,7 +230,7 @@ class VoiceInterface:
         """Execute one listen → think → speak cycle."""
 
         # ── Listen ────────────────────────────────────────────────
-        print("\n  🎤 Listening... (speak now)")
+        print("\n  [Listening... (speak now)]")
         text = self._listen_with_retry()
 
         if not text:
@@ -238,21 +238,21 @@ class VoiceInterface:
             return
 
         # ── Display what was heard ────────────────────────────────
-        print(f"\n  🗣️  You: {text}")
+        print(f"\n  [User]: {text}")
 
         # ── Check exit command ────────────────────────────────────
         if text.strip().lower().rstrip(".!") in _EXIT_COMMANDS:
-            print("\n  👋 Goodbye!")
+            print("\n  [Goodbye!]")
             self._tts.speak("Goodbye! Have a great day.")
             self._running = False
             return
 
         # ── Think ─────────────────────────────────────────────────
-        print("  🤔 Thinking...")
+        print("  [Thinking...]")
         response = asyncio.run(self._brain.think(text))
 
         # ── Display + Speak ───────────────────────────────────────
-        print(f"\n  🤖 FLEEA: {response}")
+        print(f"\n  [FLEEA]: {response}")
         self._tts.speak(response)
 
     def _listen_with_retry(self) -> str:
@@ -323,14 +323,14 @@ class VoiceInterface:
 def _print_banner() -> None:
     """Print the voice mode startup banner."""
     print("""
-  ╔══════════════════════════════════════════╗
-  ║        FLEEA — Voice Mode               ║
-  ║   Future Learning Executive & Everyday  ║
-  ║              Assistant                  ║
-  ╠══════════════════════════════════════════╣
-  ║  Say "exit" to quit                     ║
-  ║  Speak naturally after the prompt       ║
-  ╚══════════════════════════════════════════╝
+  +------------------------------------------+
+  |        FLEEA - Voice Mode                |
+  |   Future Learning Executive & Everyday   |
+  |              Assistant                   |
+  +------------------------------------------+
+  |  Say "exit" to quit                      |
+  |  Speak naturally after the prompt        |
+  +------------------------------------------+
     """)
 
 

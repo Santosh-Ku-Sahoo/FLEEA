@@ -36,8 +36,8 @@ from pathlib import Path
 from typing import Any, Generator
 
 
-# Bump this when the schema changes.  Phase 1 starts at 1.
-SCHEMA_VERSION: int = 1
+# Bump this when the schema changes.
+SCHEMA_VERSION: int = 2
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -636,6 +636,61 @@ class DatabaseManager:
         return summary
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    #  USER AUTHENTICATION
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def create_user(
+        self, user_id: str, name: str, email: str, password_hash: str
+    ) -> bool:
+        """Create a new user. Returns True if successful, False if user_id exists."""
+        with self.connection() as conn:
+            try:
+                conn.execute(
+                    """
+                    INSERT INTO users (user_id, name, email, password_hash, created_at)
+                    VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (user_id, name, email, password_hash, _now_iso()),
+                )
+                return True
+            except sqlite3.IntegrityError:
+                return False
+
+    def authenticate_user(self, user_id: str) -> dict[str, Any] | None:
+        """Fetch user by user_id for authentication."""
+        with self.connection() as conn:
+            row = conn.execute(
+                "SELECT * FROM users WHERE user_id = ?", (user_id,)
+            ).fetchone()
+            return dict(row) if row else None
+
+    def get_all_users(self) -> list[dict[str, Any]]:
+        """Fetch all registered users for admin dashboard."""
+        with self.connection() as conn:
+            rows = conn.execute(
+                "SELECT id, user_id, name, email, role, created_at FROM users ORDER BY created_at DESC"
+            ).fetchall()
+            return [dict(row) for row in rows]
+
+    def delete_user(self, user_id: str) -> bool:
+        """Delete a user. Returns True if a user was deleted."""
+        with self.connection() as conn:
+            cursor = conn.execute("DELETE FROM users WHERE user_id = ?", (user_id,))
+            return cursor.rowcount > 0
+
+    def update_user(self, user_id: str, name: str, email: str) -> bool:
+        """Update user profile info. Returns True if successful."""
+        with self.connection() as conn:
+            try:
+                cursor = conn.execute(
+                    "UPDATE users SET name = ?, email = ? WHERE user_id = ?",
+                    (name, email, user_id)
+                )
+                return cursor.rowcount > 0
+            except sqlite3.IntegrityError:
+                return False
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  HEALTH / DIAGNOSTICS
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -645,7 +700,7 @@ class DatabaseManager:
         Used by the /status CLI command.
         """
         tables = [
-            "execution_logs", "conversations", "sessions",
+            "users", "execution_logs", "conversations", "sessions",
             "user_profile", "tasks", "calendar_events",
         ]
         counts: dict[str, int] = {}
@@ -696,6 +751,23 @@ def _to_json(data: Any) -> str:
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 _SCHEMA_SQL: str = """
+
+-- ─── USERS ───────────────────────────────────────────────────────
+-- Registered users for authentication and multi-tenant persistence.
+
+CREATE TABLE IF NOT EXISTS users (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id       TEXT    UNIQUE NOT NULL,
+    name          TEXT    NOT NULL,
+    email         TEXT    UNIQUE NOT NULL,
+    password_hash TEXT    NOT NULL,
+    role          TEXT    DEFAULT 'user',
+    created_at    TEXT    NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_userid ON users(user_id);
+CREATE INDEX IF NOT EXISTS idx_users_email  ON users(email);
+
 
 -- ─── EXECUTION LOGS ──────────────────────────────────────────────
 -- Every tool call the agent makes is recorded here.

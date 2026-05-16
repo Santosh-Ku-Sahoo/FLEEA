@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     Application-wide configuration.
 
     Required env vars (will fail fast if absent):
-        ANTHROPIC_API_KEY
+        GOOGLE_API_KEY
         TAVILY_API_KEY
 
     Everything else has safe defaults and can be tuned via .env
@@ -55,19 +55,19 @@ class Settings(BaseSettings):
     #  LLM PROVIDER CONFIGURATION
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    # Primary brain — Claude (Anthropic). REQUIRED.
-    ANTHROPIC_API_KEY: str
+    # Primary brain — Gemini (Google). REQUIRED.
+    GOOGLE_API_KEY: str
 
-    # Default model for all Claude API calls.
-    # Sonnet strikes the best cost / tool-calling-quality balance.
-    DEFAULT_MODEL: str = "claude-sonnet-4-20250514"
+    # Default model for all Gemini API calls.
+    # Flash strikes the best cost / tool-calling-quality balance.
+    DEFAULT_MODEL: str = "gemini-2.0-flash"
 
-    # Maximum tokens Claude may generate per response.
+    # Maximum tokens the LLM may generate per response.
     MAX_RESPONSE_TOKENS: int = 4096
 
     # Maximum number of messages (user + assistant turns) to keep in
     # the conversation history.  Older messages are trimmed to prevent
-    # exceeding Claude's context window.  Each tool-use cycle adds
+    # exceeding the model's context window.  Each tool-use cycle adds
     # multiple messages, so 50 messages ≈ 15–20 user turns.
     MAX_CONTEXT_MESSAGES: int = 50
 
@@ -94,7 +94,7 @@ class Settings(BaseSettings):
     #  RETRY / RESILIENCE CONFIGURATION
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    # How many times to retry a failed Claude API call
+    # How many times to retry a failed LLM API call
     # (connection errors, 429 rate-limits, 5xx server errors).
     MAX_RETRIES: int = 3
 
@@ -106,7 +106,7 @@ class Settings(BaseSettings):
     # a single user turn.  Prevents infinite agentic loops.
     MAX_TOOL_ITERATIONS: int = 10
 
-    # Per-request timeout for the Anthropic SDK (seconds).
+    # Per-request timeout for the Gemini SDK (seconds).
     API_TIMEOUT_SECONDS: int = 60
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

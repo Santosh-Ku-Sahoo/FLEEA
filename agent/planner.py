@@ -3,7 +3,7 @@ FLEEA Task Planner — LLM-powered goal decomposition into actionable steps.
 
 Architecture:
     The Planner is the first stage of the autonomous agent pipeline.
-    Given a high-level user goal, it calls Claude with a structured prompt
+    Given a high-level user goal, it calls Gemini with a structured prompt
     that decomposes the goal into 3–7 concrete, actionable TaskSteps.
 
     Each TaskStep is a self-contained instruction that the Executor can
@@ -15,8 +15,8 @@ Architecture:
 Design:
     - Settings injected via constructor (API key, model).
     - Output is a list of TaskStep dataclasses with PENDING status.
-    - Claude is forced to output JSON via a structured prompt.
-    - Fallback: if Claude returns unparseable output, wrap goal as single step.
+    - The LLM is forced to output JSON via a structured prompt.
+    - Fallback: if the LLM returns unparseable output, wrap goal as single step.
     - TaskStatus and TaskStep are defined here as shared types.
 
 Usage:
@@ -35,7 +35,8 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
-import anthropic
+from google import genai
+from google.genai import types
 
 from config.settings import Settings
 
@@ -192,10 +193,7 @@ class TaskPlanner:
     """
 
     def __init__(self, settings: Settings) -> None:
-        self._client = anthropic.Anthropic(
-            api_key=settings.ANTHROPIC_API_KEY,
-            timeout=settings.API_TIMEOUT_SECONDS,
-        )
+        self._client = genai.Client(api_key=settings.GOOGLE_API_KEY)
         self._model = settings.DEFAULT_MODEL
         self._max_tokens = 1024  # plans are short — save tokens
 
@@ -248,28 +246,24 @@ class TaskPlanner:
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     def _call_llm(self, goal: str) -> str:
-        """Call Claude to generate a task plan as JSON."""
+        """Call Gemini to generate a task plan as JSON."""
         prompt = _PLANNING_PROMPT.format(goal=goal)
 
-        response = self._client.messages.create(
+        response = self._client.models.generate_content(
             model=self._model,
-            max_tokens=self._max_tokens,
-            messages=[{"role": "user", "content": prompt}],
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                max_output_tokens=self._max_tokens,
+            ),
         )
 
-        # Extract text from response
-        text_parts: list[str] = []
-        for block in response.content:
-            if hasattr(block, "text"):
-                text_parts.append(block.text)
-
-        return "\n".join(text_parts).strip()
+        return response.text or ""
 
     def _parse_steps(
         self, raw_json: str, goal_id: str
     ) -> list[TaskStep]:
         """
-        Parse Claude's JSON output into TaskStep instances.
+        Parse Gemini's JSON output into TaskStep instances.
 
         Handles common LLM quirks:
         - Markdown code fences around JSON

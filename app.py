@@ -49,6 +49,9 @@ from database.models import DatabaseManager
 from tools.tool_registry import ToolRegistry, ToolCategory, build_default_registry
 
 
+# ── Module logger ──────────────────────────────────────────────────
+_log = logging.getLogger("fleea.app")
+
 # ── Constants ──────────────────────────────────────────────────────
 
 _VERSION = "0.1.0"
@@ -168,6 +171,29 @@ class FLEEAApp:
         # Build tool registry via the centralized factory
         self._registry = build_default_registry(self._settings)
 
+        # Phase 2 memory wiring (graceful degradation)
+        short_term = None
+        retriever = None
+        profile_mgr = None
+        vector_store = None
+
+        try:
+            from memory.short_term import ShortTermMemory
+            from memory.retriever import MemoryRetriever
+            from memory.profile_manager import ProfileManager
+            from memory.vector_store import VectorStore
+
+            persist_dir = str(
+                self._settings.project_root / "memory" / "chroma_db"
+            )
+            vector_store = VectorStore(persist_dir=persist_dir)
+            retriever = MemoryRetriever(vector_store)
+            profile_mgr = ProfileManager(self._db)
+            short_term = ShortTermMemory(max_turns=10)
+            _log.info("Memory subsystems wired successfully")
+        except Exception as exc:
+            _log.warning("Memory subsystem init failed (non-fatal): %s", exc)
+
         # Create the brain with all injected dependencies
         self._brain = FLEEABrain(
             settings=self._settings,
@@ -175,6 +201,10 @@ class FLEEAApp:
             logger=self._logger,
             safety=safety,
             session_manager=self._session_mgr,
+            short_term_memory=short_term,
+            memory_retriever=retriever,
+            profile_manager=profile_mgr,
+            vector_store=vector_store,
         )
 
         # ── 4. Start Session ──────────────────────────────────────
@@ -202,7 +232,7 @@ class FLEEAApp:
         while True:
             try:
                 self._console.print()
-                user_input = self._console.input("[bold cyan]You → [/]").strip()
+                user_input = self._console.input("[bold cyan]You >> [/]").strip()
 
                 if not user_input:
                     continue
@@ -400,7 +430,7 @@ class FLEEAApp:
             table.add_row("Model",          brain_status["model"])
             table.add_row("Max Tokens",     str(brain_status["max_tokens"]))
             table.add_row("Registered Tools",
-                          ", ".join(brain_status["registered_tools"]) or "—")
+                          ", ".join(brain_status["registered_tools"]) or "-")
 
         self._console.print()
         self._console.print(table)
@@ -439,7 +469,7 @@ class FLEEAApp:
             timestamp = str(log.get("timestamp", ""))[:19]
             tool = log.get("selected_tool", "unknown")
             success = log.get("success", False)
-            status = "[green]✓[/green]" if success else "[red]✗[/red]"
+            status = "[green]OK[/green]" if success else "[red]FAIL[/red]"
             tokens = str(log.get("total_tokens", 0))
             cost = f"${log.get('estimated_cost', 0):.6f}"
             duration = f"{log.get('execution_duration_ms', 0):.0f}ms"
@@ -461,8 +491,8 @@ class FLEEAApp:
             "  Future Learning Executive & Everyday Assistant\n\n",
             style="white",
         )
-        banner.append("  Phase 1 ", style="bold green")
-        banner.append("— Core Brain + Web Search\n", style="white")
+        banner.append("  Phase 5 ", style="bold green")
+        banner.append("- Production Ready (Memory + Voice + Auth + Admin)\n", style="white")
         banner.append(f"  Version: {_VERSION}\n", style="muted")
         banner.append(f"  Session: {session_id}\n", style="muted")
 
@@ -472,7 +502,7 @@ class FLEEAApp:
                 banner,
                 border_style="cyan",
                 padding=(1, 2),
-                title="🤖",
+                title="FLEEA",
                 subtitle="Type /help for commands",
             )
         )
@@ -533,7 +563,7 @@ class FLEEAApp:
                 )
 
                 self._console.print(
-                    Panel(summary, border_style="cyan", title="👋 Goodbye")
+                    Panel(summary, border_style="cyan", title="Goodbye")
                 )
 
         self._console.print()

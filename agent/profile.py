@@ -40,7 +40,7 @@ class UserProfile:
 
     def set(self, key: str, value: str, category: str = _DEFAULT_CATEGORY) -> None:
         """Set a profile value under a given category (default: preferences)."""
-        self._db.set_profile_value(category, key, value)
+        self._db.set_profile(category, key, value)
 
     def get(self, key: str, category: str = _DEFAULT_CATEGORY) -> str | None:
         """Get a profile value, or None if not set."""

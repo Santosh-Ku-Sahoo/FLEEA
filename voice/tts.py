@@ -8,9 +8,12 @@ Architecture:
     Windows, NSSpeechSynthesizer on macOS, espeak on Linux).
 
 Design:
-    - Engine initialized once at construction.
-    - ``speak()`` blocks until the utterance is complete (pyttsx3's
-      runAndWait() is inherently synchronous).
+    - NO engine is created on the main thread.  pyttsx3 uses a COM
+      singleton on Windows (SAPI5) that is bound to the OS thread it
+      was first initialized on.  Calling pyttsx3.init() on one thread
+      and runAndWait() on another corrupts the COM apartment and causes
+      silent failure.  To avoid this, speak() spawns a fresh daemon
+      thread and creates a brand-new engine *inside* that thread.
     - Markdown artifacts (code blocks, URLs, headers) are stripped
       before speaking to produce clean, natural audio.
     - Rate, volume, and voice are configurable at init and runtime.
@@ -28,7 +31,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Any
+import threading
 
 _log = logging.getLogger("fleea.voice.tts")
 
@@ -58,7 +61,12 @@ class TextToSpeech:
         voice_index: int | None = None,
     ) -> None:
         """
-        Initialize the TTS engine.
+        Configure TTS settings (no engine created here).
+
+        The pyttsx3 engine is intentionally NOT created on the calling
+        thread.  Each speak() call spawns a fresh daemon thread and
+        creates the engine there, ensuring COM-apartment safety on
+        Windows (SAPI5) and thread safety everywhere else.
 
         Args:
             rate: Speech rate in words per minute.
@@ -67,41 +75,23 @@ class TextToSpeech:
                          None = system default.  Use ``list_voices()``
                          to discover available voices.
         """
-        self._engine: Any = None
         self._rate = rate
         self._volume = volume
         self._voice_index = voice_index
-        self._initialized = False
 
-        self._init_engine()
-
-    def _init_engine(self) -> None:
-        """Initialize the pyttsx3 engine with configured settings."""
+        # Verify pyttsx3 is importable — don't create an engine here.
         try:
-            import pyttsx3
+            import pyttsx3  # noqa: F401
+            self._available = True
+            _log.info("TTS ready (pyttsx3 found): rate=%d  volume=%.1f", rate, volume)
+        except ImportError:
+            self._available = False
+            _log.error("pyttsx3 not installed — TTS unavailable. Run: pip install pyttsx3")
 
-            self._engine = pyttsx3.init()
-            self._engine.setProperty("rate", self._rate)
-            self._engine.setProperty("volume", self._volume)
-
-            # Set voice if specified
-            if self._voice_index is not None:
-                voices = self._engine.getProperty("voices")
-                if 0 <= self._voice_index < len(voices):
-                    self._engine.setProperty("voice", voices[self._voice_index].id)
-                    _log.info("TTS voice set to: %s", voices[self._voice_index].name)
-                else:
-                    _log.warning(
-                        "Voice index %d out of range (0–%d), using default",
-                        self._voice_index, len(voices) - 1,
-                    )
-
-            self._initialized = True
-            _log.info("TTS initialized: rate=%d  volume=%.1f", self._rate, self._volume)
-
-        except Exception as exc:
-            _log.error("TTS initialization failed: %s", exc)
-            self._initialized = False
+    # keep _init_engine as a no-op stub so any callers don't crash
+    def _init_engine(self) -> None:  # noqa: D401
+        """No-op: engine is now created per-thread inside speak()."""
+        pass
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  TEXT CLEANING
@@ -157,16 +147,18 @@ class TextToSpeech:
         Cleans markdown formatting, truncates if too long, and
         synthesizes speech via the system's native TTS engine.
 
+        Runs in a dedicated daemon thread so that it is always safe
+        to call from Streamlit's worker threads or any async context.
+        On Windows, SAPI5 is COM-based and must be initialized on the
+        same thread that calls runAndWait(); spawning a fresh thread
+        per utterance guarantees that invariant.
+
         Args:
             text: The text to speak.  Markdown is stripped automatically.
 
         Returns:
             True if speech completed successfully, False otherwise.
         """
-        if not self._initialized or not self._engine:
-            _log.warning("TTS not initialized, skipping speech")
-            return False
-
         if not text or not text.strip():
             return False
 
@@ -179,25 +171,35 @@ class TextToSpeech:
             clean = clean[:_MAX_SPEAK_LENGTH] + "... I'll stop here for brevity."
             _log.debug("Truncated speech to %d chars", _MAX_SPEAK_LENGTH)
 
-        try:
-            _log.debug("Speaking %d chars", len(clean))
-            self._engine.say(clean)
-            self._engine.runAndWait()
-            return True
+        result: list[bool] = []
 
-        except Exception as exc:
-            _log.error("TTS speech failed: %s", exc)
-            # Attempt to reinitialize engine for next call
-            self._init_engine()
-            return False
+        def _run() -> None:
+            """Initialize a fresh engine on this thread and speak."""
+            try:
+                import pyttsx3
+                engine = pyttsx3.init()
+                engine.setProperty("rate", self._rate)
+                engine.setProperty("volume", self._volume)
+                if self._voice_index is not None:
+                    voices = engine.getProperty("voices")
+                    if 0 <= self._voice_index < len(voices):
+                        engine.setProperty("voice", voices[self._voice_index].id)
+                _log.debug("Speaking %d chars", len(clean))
+                engine.say(clean)
+                engine.runAndWait()
+                result.append(True)
+            except Exception as exc:
+                _log.error("TTS speech failed: %s", exc)
+                result.append(False)
+
+        t = threading.Thread(target=_run, daemon=True)
+        t.start()
+        t.join(timeout=30)  # max 30 s; prevents indefinite hangs
+        return bool(result and result[0])
 
     def stop(self) -> None:
-        """Stop any ongoing speech."""
-        if self._engine:
-            try:
-                self._engine.stop()
-            except Exception:
-                pass
+        """No-op: each speak() runs in its own thread and cleans up automatically."""
+        pass
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     #  CONFIGURATION
@@ -206,33 +208,40 @@ class TextToSpeech:
     def set_rate(self, rate: int) -> None:
         """Update speech rate (words per minute)."""
         self._rate = rate
-        if self._engine:
-            self._engine.setProperty("rate", rate)
 
     def set_volume(self, volume: float) -> None:
         """Update output volume (0.0 – 1.0)."""
         self._volume = max(0.0, min(1.0, volume))
-        if self._engine:
-            self._engine.setProperty("volume", self._volume)
 
     def list_voices(self) -> list[dict[str, str]]:
-        """Return available system voices for discovery."""
-        if not self._engine:
-            return []
+        """Return available system voices. Creates a temporary engine for discovery."""
+        result: list[dict[str, str]] = []
 
-        voices = self._engine.getProperty("voices")
-        return [
-            {"index": i, "name": v.name, "id": v.id}
-            for i, v in enumerate(voices)
-        ]
+        def _get_voices() -> None:
+            try:
+                import pyttsx3
+                engine = pyttsx3.init()
+                voices = engine.getProperty("voices")
+                result.extend(
+                    {"index": str(i), "name": v.name, "id": v.id}
+                    for i, v in enumerate(voices)
+                )
+                engine.stop()
+            except Exception as exc:
+                _log.warning("list_voices failed: %s", exc)
+
+        t = threading.Thread(target=_get_voices, daemon=True)
+        t.start()
+        t.join(timeout=10)
+        return result
 
     @property
     def is_available(self) -> bool:
-        """Whether the TTS engine is initialized and ready."""
-        return self._initialized
+        """Whether pyttsx3 is installed and TTS can be used."""
+        return self._available
 
     def __repr__(self) -> str:
         return (
             f"TextToSpeech(rate={self._rate}, volume={self._volume}, "
-            f"initialized={self._initialized})"
+            f"available={self._available})"
         )

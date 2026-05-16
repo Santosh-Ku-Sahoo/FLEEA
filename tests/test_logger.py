@@ -19,9 +19,10 @@ try:
     cost = ExecutionLogger.calculate_cost("claude-sonnet-4-20250514", 1000, 500)
     expected = (1000 / 1_000_000) * 3.0 + (500 / 1_000_000) * 15.0
     assert abs(cost - expected) < 0.0001
-    # Unknown model falls back to default pricing
+    # Unknown model falls back to default pricing (0.10 input, 0.40 output)
     cost_unknown = ExecutionLogger.calculate_cost("unknown-model", 1000, 500)
-    assert cost_unknown == cost  # same as sonnet (default = sonnet pricing)
+    expected_default = (1000 / 1_000_000) * 0.10 + (500 / 1_000_000) * 0.40
+    assert abs(cost_unknown - expected_default) < 0.0001
     print("  OK  Cost calculation: known model + fallback")
 
     # ── 2. Pricing table coverage ──
@@ -30,14 +31,15 @@ try:
     assert "gpt-4o" in MODEL_PRICING
     print(f"  OK  Pricing table: {len(MODEL_PRICING)} models")
 
-    # ── 3. Token usage extraction (mock response) ──
-    class MockUsage:
-        input_tokens = 200
-        output_tokens = 400
+    # ── 3. Token usage extraction (mock response — Gemini format) ──
+    class MockUsageMetadata:
+        prompt_token_count = 200
+        candidates_token_count = 400
 
     class MockResponse:
-        usage = MockUsage()
-        model = "claude-sonnet-4-20250514"
+        usage_metadata = MockUsageMetadata()
+        model_version = "gemini-2.5-flash"
+        model = "gemini-2.5-flash"
 
     usage = ExecutionLogger.extract_usage(MockResponse())
     assert usage.prompt_tokens == 200
@@ -86,7 +88,8 @@ try:
     assert stats.tool_calls == 2
     assert stats.tool_successes == 1
     assert stats.tool_errors == 1
-    assert stats.total_tokens == 500
+    # Note: log_tool_execution tracks tool_calls counts only in session stats;
+    # token accumulation is handled by track_api_usage() to avoid double-counting.
     assert stats.success_rate == 50.0
     print("  OK  log_tool_execution: success + failure + stats")
 
@@ -125,7 +128,7 @@ try:
     # ── 7. API usage tracking ──
     logger.track_api_usage("s1", TokenUsage(100, 200, 300, 0.003))
     assert stats.api_calls == 1
-    assert stats.total_tokens == 800  # 500 + 300
+    assert stats.total_tokens == 300  # only track_api_usage accumulates tokens
     print("  OK  track_api_usage: in-memory accumulation")
 
     # ── 8. Session stats flush ──
@@ -133,7 +136,7 @@ try:
     sess = db.get_session("s1")
     assert sess is not None
     assert sess["message_count"] == 2
-    assert sess["total_tokens"] == 800
+    assert sess["total_tokens"] == 300  # matches in-memory stats
 
     # Flush non-existent session — should not crash
     logger.flush_session_stats("nonexistent")

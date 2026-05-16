@@ -65,7 +65,12 @@ _log = logging.getLogger("fleea.logger")
 #  Last updated: 2025-05-15
 
 MODEL_PRICING: dict[str, dict[str, float]] = {
-    # Anthropic — Claude
+    # Google — Gemini
+    "gemini-2.0-flash":             {"input": 0.10,  "output": 0.40},
+    "gemini-2.5-flash":             {"input": 0.15,  "output": 0.60},
+    "gemini-2.5-pro":               {"input": 1.25,  "output": 10.00},
+    "gemini-2.0-flash-lite":        {"input": 0.075, "output": 0.30},
+    # Anthropic — Claude (legacy, kept for log compatibility)
     "claude-sonnet-4-20250514":     {"input": 3.00,  "output": 15.00},
     "claude-3-5-sonnet-20241022":   {"input": 3.00,  "output": 15.00},
     "claude-3-5-haiku-20241022":    {"input": 0.80,  "output": 4.00},
@@ -77,7 +82,7 @@ MODEL_PRICING: dict[str, dict[str, float]] = {
 }
 
 # Fallback when the model ID isn't in the table
-_DEFAULT_PRICING: dict[str, float] = {"input": 3.00, "output": 15.00}
+_DEFAULT_PRICING: dict[str, float] = {"input": 0.10, "output": 0.40}
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -174,18 +179,22 @@ class ExecutionLogger:
     @staticmethod
     def extract_usage(response: Any) -> TokenUsage:
         """
-        Extract token usage from an Anthropic API response object.
+        Extract token usage from a Gemini API response object.
 
         Safely handles missing attributes — returns empty TokenUsage
-        if the response doesn't have usage data (e.g., error responses).
+        if the response doesn't have usage data.
         """
-        usage = getattr(response, "usage", None)
+        usage = getattr(response, "usage_metadata", None)
         if usage is None:
             return TokenUsage()
 
-        prompt = getattr(usage, "input_tokens", 0) or 0
-        completion = getattr(usage, "output_tokens", 0) or 0
-        model = getattr(response, "model", "")
+        prompt = getattr(usage, "prompt_token_count", 0) or 0
+        completion = getattr(usage, "candidates_token_count", 0) or 0
+        model = getattr(response, "model_version", "") or ""
+
+        # Try to extract model name from response; fall back to empty
+        if not model:
+            model = getattr(response, "model", "") or ""
 
         cost = ExecutionLogger.calculate_cost(model, prompt, completion)
         return TokenUsage(

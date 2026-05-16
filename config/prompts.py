@@ -4,15 +4,14 @@ FLEEA Prompt Architecture — System prompts, safety rules, and behavioral contr
 Version: 2.0.0 (Phase 2 — Memory-Aware Intelligence)
 
 This module defines the complete behavioral contract between the application
-and the Claude API.  Every string here is injected into the system prompt
+and the Gemini API.  Every string here is injected into the system prompt
 and directly controls how the agent thinks, acts, and refuses.
 
 Design:
     - SYSTEM_PROMPT:  Core identity, tone, behavioral rules, tool doctrine.
     - SAFETY_PROMPT:  Three-tier action classification with concrete examples.
     - TOOL_DOCTRINE:  When / why / how to invoke each registered tool.
-    - Prompts are composed at runtime in brain.py:
-          system = SYSTEM_PROMPT + SAFETY_PROMPT + TOOL_DOCTRINE + profile_context
+           system = SYSTEM_PROMPT + SAFETY_PROMPT + TOOL_DOCTRINE + profile_context
 
 Maintenance:
     - Bump the version constant when modifying any prompt.
@@ -194,7 +193,7 @@ def build_system_prompt(user_profile_context: str = "") -> str:
             is handled dynamically by the brain.
 
     Returns:
-        A single string ready for Claude's ``system`` parameter.
+        A single string ready for the model's system instruction.
     """
     sections = [SYSTEM_PROMPT, SAFETY_PROMPT, TOOL_DOCTRINE]
 

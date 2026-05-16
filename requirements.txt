@@ -3,7 +3,7 @@
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 # LLM Provider
-anthropic>=0.40.0
+google-genai>=1.0.0
 
 # Async HTTP (Tavily search)
 httpx>=0.27.0
@@ -28,9 +28,9 @@ chromadb>=0.5.0
 
 # Embedding model (all-MiniLM-L6-v2, 384-dim, CPU-friendly)
 sentence-transformers>=3.0.0
-
-# Web UI
-streamlit>=1.35.0
+Flask>=3.0.0
+Flask-SocketIO>=5.3.6
+eventlet>=0.36.10
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Phase 3: Voice Interface

@@ -144,8 +144,21 @@ class SpeechToText:
     @staticmethod
     def _is_silence(audio: np.ndarray) -> bool:
         """Check if the recorded audio is effectively silence."""
-        rms = float(np.sqrt(np.mean(audio ** 2)))
+        # Clean audio of NaNs or Infs that might have crept in from hardware issues
+        audio = np.nan_to_num(audio, nan=0.0, posinf=0.0, neginf=0.0)
+        
+        # Use absolute mean as a more robust proxy for volume if RMS overflows
+        try:
+            rms = float(np.sqrt(np.mean(np.square(audio))))
+        except (RuntimeError, OverflowError):
+            rms = float(np.mean(np.abs(audio)))
+
         _log.debug("Audio RMS: %.4f (threshold: %.4f)", rms, _SILENCE_RMS_THRESHOLD)
+        
+        # Handle cases where rms might be NaN after calculations
+        if np.isnan(rms):
+            return True
+            
         return rms < _SILENCE_RMS_THRESHOLD
 
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

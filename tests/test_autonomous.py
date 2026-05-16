@@ -1,4 +1,4 @@
-"""
+r"""
 FLEEA Autonomous Agent — Integration Test Script.
 
 Wires all dependencies (mirroring app.py), then runs a simple goal

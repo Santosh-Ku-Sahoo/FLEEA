@@ -132,7 +132,7 @@ assert r0["url"] == "https://www.techcrunch.com/ai-breakthrough"
 assert r0["confidence"] == 0.956
 
 r2 = formatted["results"][2]
-assert r2["title"] == "Untitled"  # fallback for missing title
+assert r2["title"] == ""  # empty string preserved (not replaced by fallback)
 assert r2["source"] == "example.com"
 assert r2["confidence"] == 0.0
 print("  OK  Result formatting: titles, sources, confidence, edge cases")
