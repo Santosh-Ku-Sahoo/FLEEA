@@ -11,9 +11,11 @@ services:
     runtime: python
     plan: free
     buildCommand: |
-      pip install -r requirements.txt || echo "Some dependencies failed (expected for voice on cloud)"
+      pip install --upgrade pip
+      pip install flask flask-socketio gunicorn gevent gevent-websocket eventlet google-genai httpx pydantic pydantic-settings python-dotenv rich tenacity chromadb sentence-transformers bcrypt numpy
+      pip install faster-whisper sounddevice pyttsx3 || echo "Voice deps skipped (expected on cloud)"
       cd web && npm install && npm run build
-    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT interfaces.voice_ui_server:app
+    startCommand: gunicorn --worker-class gevent -w 1 --bind 0.0.0.0:$PORT interfaces.voice_ui_server:app
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.10"

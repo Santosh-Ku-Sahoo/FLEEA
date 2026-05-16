@@ -18,9 +18,20 @@ Usage:
 
 from __future__ import annotations
 
-# ── Eventlet Monkey Patching (Must be FIRST) ───────────────────────
-import eventlet
-eventlet.monkey_patch()
+# ── Async Monkey Patching (Must be FIRST) ──────────────────────────
+# Prefer gevent (cloud-friendly), fall back to eventlet (local dev).
+_async_mode = "threading"  # safe default
+try:
+    import gevent.monkey
+    gevent.monkey.patch_all()
+    _async_mode = "gevent"
+except ImportError:
+    try:
+        import eventlet
+        eventlet.monkey_patch()
+        _async_mode = "eventlet"
+    except ImportError:
+        pass  # will use threading mode
 
 import asyncio
 import logging
@@ -77,9 +88,8 @@ _DIST_DIR = Path(_PROJECT_ROOT) / "web" / "dist"
 app = Flask(__name__, static_folder=str(_DIST_DIR), static_url_path="")
 app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "fleea-secure-session-key")
 
-# SocketIO (async mode depends on eventlet presence)
-_ASYNC_MODE = "eventlet" if "eventlet" in sys.modules else "threading"
-sio = SocketIO(app, cors_allowed_origins="*", async_mode=_ASYNC_MODE)
+# SocketIO (async mode set by monkey-patch block at top of file)
+sio = SocketIO(app, cors_allowed_origins="*", async_mode=_async_mode)
 
 # Database Manager for API routes
 try:
@@ -475,7 +485,8 @@ def main() -> None:
         return
 
     port = int(os.environ.get("PORT", 5050))
-    print(f"\n  [FLEEA] Web Dashboard API running on http://localhost:{port}\n")
+    print(f"\n  [FLEEA] Web Dashboard API running on http://localhost:{port}")
+    print(f"  [FLEEA] Async mode: {_async_mode}")
     print("  Use 'npm run dev' in the 'web' folder for development UI.")
 
     # Production eventlet monkey patch warning

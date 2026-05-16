@@ -5893,3 +5893,4 @@ google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429,
 2026-05-16 21:16:20  fleea.app               INFO      Memory subsystems wired successfully
 2026-05-16 21:16:21  fleea.brain             INFO      Brain initialized: model=gemini-2.0-flash  max_tokens=4096  tools=['web_search']  memory=True  retriever=True  profile=True  vector=True
 2026-05-16 21:16:21  fleea.session           INFO      Session created: 4a23793b
+2026-05-16 22:35:42,406  fleea.memory.vector_store  ERROR    VectorStore initialization failed: Your currently installed version of Keras is Keras 3, but this is not yet supported in Transformers. Please install the backwards-compatible tf-keras package with `pip install tf-keras`.
