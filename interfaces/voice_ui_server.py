@@ -253,6 +253,9 @@ def on_start(data: dict[str, Any] = None):
         data = {}
     username = data.get("username", "User")
     if not _state["running"]:
+        if not _VOICE:
+            sio.emit("state", {"status": "error", "message": "Backend voice unavailable on this server. Please use browser voice features."})
+            return
         _state["running"] = True
         Thread(target=_voice_loop, args=(username,), daemon=True).start()
 
