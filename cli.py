@@ -46,7 +46,7 @@ from agent.safety import SafetyManager
 from agent.session import SessionManager
 from config.settings import Settings
 from database.models import DatabaseManager
-from tools.tool_registry import ToolRegistry, ToolCategory, build_default_registry
+from tools.tool_registry import ToolRegistry, build_default_registry
 
 
 # ── Module logger ──────────────────────────────────────────────────
@@ -361,7 +361,7 @@ class FLEEAApp:
 
         self._console.print()
         for entry in history:
-            timestamp = entry.get("timestamp", "")[:19]
+            timestamp = (entry.get("timestamp") or "")[:19]
 
             # User turn
             user_msg = entry.get("user_message", "")

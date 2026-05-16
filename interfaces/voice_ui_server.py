@@ -19,12 +19,8 @@ Usage:
 from __future__ import annotations
 
 # ── Eventlet Monkey Patching (Must be FIRST) ───────────────────────
-import os
-try:
-    import eventlet
-    eventlet.monkey_patch()
-except ImportError:
-    pass
+import eventlet
+eventlet.monkey_patch()
 
 import asyncio
 import logging
@@ -86,8 +82,14 @@ _ASYNC_MODE = "eventlet" if "eventlet" in sys.modules else "threading"
 sio = SocketIO(app, cors_allowed_origins="*", async_mode=_ASYNC_MODE)
 
 # Database Manager for API routes
-settings = Settings()  # type: ignore[call-arg]
-db_manager = DatabaseManager(settings.db_path_resolved)
+try:
+    settings = Settings()  # type: ignore[call-arg]
+    db_manager = DatabaseManager(settings.db_path_resolved)
+except Exception as e:
+    _log.error("Failed to initialize settings/database: %s", e)
+    # Don't crash at import time, let main() handle the error reporting
+    settings = None
+    db_manager = None
 
 _state: dict[str, Any] = {
     "status": "idle",
@@ -466,7 +468,12 @@ def main() -> None:
     root_logger.setLevel(logging.WARNING)
     root_logger.addHandler(handler)
 
-    port = 5050
+    if not settings:
+        print("\n  [ERROR] FLEEA could not start: Missing required environment variables.")
+        print("  Ensure GOOGLE_API_KEY and TAVILY_API_KEY are set.\n")
+        return
+
+    port = int(os.environ.get("PORT", 5050))
     print(f"\n  [FLEEA] Web Dashboard API running on http://localhost:{port}\n")
     print("  Use 'npm run dev' in the 'web' folder for development UI.")
 

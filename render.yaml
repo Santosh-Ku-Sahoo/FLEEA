@@ -11,9 +11,9 @@ services:
     runtime: python
     plan: free
     buildCommand: |
-      pip install -r requirements.txt
+      pip install -r requirements.txt || echo "Some dependencies failed (expected for voice on cloud)"
       cd web && npm install && npm run build
-    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app
+    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT interfaces.voice_ui_server:app
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.10"
@@ -25,3 +25,9 @@ services:
         sync: false
       - key: FLASK_SECRET_KEY
         generateValue: true
+      - key: DB_PATH
+        value: "/data/fleea.db"
+    disk:
+      name: fleea-data
+      mountPath: /data
+      sizeGB: 1

@@ -51,9 +51,16 @@ export function useSocket() {
       };
 
       recognition.onend = () => {
-        // If we're still supposed to be listening, restart it (mimic continuous backend loop)
+        // If we're still supposed to be listening, restart it with a small delay
+        // to avoid browser state errors (mimic continuous backend loop)
         if (isWebVoiceActive.current) {
-          recognition.start();
+          setTimeout(() => {
+            try {
+              if (isWebVoiceActive.current) recognition.start();
+            } catch (e) {
+              console.warn('Recognition restart failed:', e);
+            }
+          }, 250);
         }
       };
 
@@ -104,6 +111,9 @@ export function useSocket() {
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
     };
   }, []);
 
@@ -125,8 +135,25 @@ export function useSocket() {
     utterance.pitch = 1.0;
     
     // Notify status change to visualizer
-    utterance.onstart = () => setState(prev => ({ ...prev, status: 'speaking' }));
-    utterance.onend = () => setState(prev => ({ ...prev, status: 'idle' }));
+    utterance.onstart = () => {
+      setState(prev => ({ ...prev, status: 'speaking' }));
+      // PAUSE recognition while speaking to prevent feedback loop
+      if (recognitionRef.current) {
+        try { recognitionRef.current.stop(); } catch(e) {}
+      }
+    };
+
+    utterance.onend = () => {
+      setState(prev => ({ ...prev, status: 'idle' }));
+      // RESUME recognition after speaking if it was supposed to be active
+      if (isWebVoiceActive.current && recognitionRef.current) {
+        setTimeout(() => {
+          try {
+            if (isWebVoiceActive.current) recognitionRef.current.start();
+          } catch(e) {}
+        }, 250);
+      }
+    };
     
     window.speechSynthesis.speak(utterance);
   };
