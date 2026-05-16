@@ -135,7 +135,7 @@ FLEEA/
 │   └── fleea.db                 # SQLite data file (auto-generated)
 │
 ├── config/                      # Settings & prompts
-│   ├── settings.py              # Pydantic-based configuration
+│   ├── settings.py              # Pydantic-based
 │   └── prompts.py               # System prompt templates
 │
 ├── tests/                       # Test suite
@@ -148,7 +148,30 @@ FLEEA/
 
 ---
 
-## Quick Start
+---
+
+## Cloud Deployment (Render / GitHub)
+
+FLEEA is pre-configured for automated deployment via **Render Blueprints**.
+
+### 1. Push to GitHub
+Fork this repository and push your changes to your `master` branch.
+
+### 2. Deploy on Render
+1. Create a new **Blueprint** service on [Render](https://render.com).
+2. Connect your GitHub repository.
+3. Set these **Environment Variables**:
+   - `GOOGLE_API_KEY`: Your Gemini API Key.
+   - `TAVILY_API_KEY`: Your Tavily API Key.
+   - `DB_PATH`: `/data/fleea.db` (ensures persistence).
+4. **Persistent Disk**: Render will mount a 1GB disk at `/data` automatically based on `render.yaml`.
+
+### 3. Voice Support
+When deployed to the cloud, FLEEA automatically switches to **Web Voice Fallback**. Use any modern browser (Chrome, Edge, Safari) to speak with the agent directly from the dashboard.
+
+---
+
+## Local Installation
 
 ### 1. Prerequisites
 
