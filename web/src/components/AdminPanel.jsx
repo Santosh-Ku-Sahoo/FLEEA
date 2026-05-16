@@ -28,19 +28,26 @@ export function AdminPanel({ onBack }) {
   }, []);
 
   const handleDelete = async (userId) => {
-    if (!window.confirm(`Are you sure you want to delete user ${userId}?`)) return;
+    if (!window.confirm(`Are you sure you want to delete user "${userId}"?`)) return;
     
     console.log('Attempting to delete user:', userId);
     try {
-      const res = await fetch(`/api/admin/users/${userId}`, { method: 'DELETE' });
+      // Use encodeURIComponent to handle special characters in userId
+      const res = await fetch(`/api/admin/users/${encodeURIComponent(userId)}`, { 
+        method: 'DELETE' 
+      });
+      
+      const data = await res.json();
+      
       if (!res.ok) {
-        throw new Error('Failed to delete user');
+        throw new Error(data.error || 'Failed to delete user');
       }
-      setUsers(users.filter(u => u.user_id !== userId));
-      alert(`User ${userId} deleted successfully.`);
+      
+      setUsers(prev => prev.filter(u => u.user_id !== userId));
+      alert(`User "${userId}" has been successfully purged from the system.`);
     } catch (err) {
       console.error('Delete error:', err);
-      alert('Error deleting user');
+      alert('System Error: ' + err.message);
     }
   };
 
@@ -121,11 +128,14 @@ export function AdminPanel({ onBack }) {
                     <td className="py-4 text-right">
                       {u.role !== 'admin' && (
                         <button
-                          onClick={() => handleDelete(u.user_id)}
-                          className="p-2 rounded-lg text-red-500/40 hover:text-red-400 hover:bg-red-500/20 transition-all"
-                          title="Delete User"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(u.user_id);
+                          }}
+                          className="p-2.5 rounded-xl text-red-500/60 hover:text-red-400 hover:bg-red-500/20 active:scale-95 transition-all cursor-pointer group"
+                          title="Purge User"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
                         </button>
                       )}
                     </td>

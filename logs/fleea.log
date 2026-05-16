@@ -5878,3 +5878,18 @@ google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429,
 2026-05-16 18:02:37,733  werkzeug              INFO     127.0.0.1 - - [16/May/2026 18:02:37] "POST /socket.io/?EIO=4&transport=polling&t=btnoj3pg&sid=zWg4qptCM5AXHKiAAAAU HTTP/1.1" 200 -
 2026-05-16 18:02:37,753  werkzeug              INFO     127.0.0.1 - - [16/May/2026 18:02:37] "GET /socket.io/?EIO=4&transport=websocket&sid=zWg4qptCM5AXHKiAAAAU HTTP/1.1" 200 -
 2026-05-16 18:14:13,983  huggingface_hub.utils._http  WARNING  Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-05-16 20:58:50  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-16 20:58:50  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-16 20:58:50  fleea.app               INFO      Memory subsystems wired successfully
+2026-05-16 20:58:52  fleea.brain             INFO      Brain initialized: model=gemini-2.0-flash  max_tokens=4096  tools=['web_search']  memory=True  retriever=True  profile=True  vector=True
+2026-05-16 20:58:52  fleea.session           INFO      Session created: 342d947e
+2026-05-16 21:11:26  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-16 21:11:26  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-16 21:11:26  fleea.app               INFO      Memory subsystems wired successfully
+2026-05-16 21:11:27  fleea.brain             INFO      Brain initialized: model=gemini-2.0-flash  max_tokens=4096  tools=['web_search']  memory=True  retriever=True  profile=True  vector=True
+2026-05-16 21:11:27  fleea.session           INFO      Session created: c761bff5
+2026-05-16 21:16:20  fleea.tools.registry    INFO      Registered tool: web_search            category=safe        approval=False
+2026-05-16 21:16:20  fleea.tools.registry    INFO      Tool registry built: 1 tool(s) registered  ['web_search']
+2026-05-16 21:16:20  fleea.app               INFO      Memory subsystems wired successfully
+2026-05-16 21:16:21  fleea.brain             INFO      Brain initialized: model=gemini-2.0-flash  max_tokens=4096  tools=['web_search']  memory=True  retriever=True  profile=True  vector=True
+2026-05-16 21:16:21  fleea.session           INFO      Session created: 4a23793b

@@ -438,6 +438,7 @@ def admin_get_users():
 
 @app.route("/api/admin/users/<user_id>", methods=["DELETE"])
 def admin_delete_user(user_id):
+    logger.info(f"Admin request: Deleting user {user_id}")
     # Fetch user first to check role
     user = db_manager.authenticate_user(user_id)
     if not user:
