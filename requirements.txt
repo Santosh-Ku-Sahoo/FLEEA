@@ -20,7 +20,7 @@ rich>=13.7.0
 tenacity>=8.3.0
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Phase 2: Memory System
+# Phase 2: Memory + Web Server
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 # Vector database (persistent, local)
@@ -28,20 +28,30 @@ chromadb>=0.5.0
 
 # Embedding model (all-MiniLM-L6-v2, 384-dim, CPU-friendly)
 sentence-transformers>=3.0.0
+
+# Web server
 Flask>=3.0.0
 Flask-SocketIO>=5.3.6
 eventlet>=0.36.10
+gunicorn>=22.0.0
+
+# Auth
+bcrypt>=4.1.0
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Phase 3: Voice Interface
+# Phase 3: Voice Interface (local desktop only)
+# These require system audio libraries and hardware.
+# On cloud servers (Render, etc.) they degrade gracefully.
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Numerical computing
+numpy>=1.24.0
 
 # Speech-to-text (CTranslate2-backed Whisper)
 faster-whisper>=1.0.0
 
-# Audio capture from microphone
+# Audio capture from microphone (needs libportaudio)
 sounddevice>=0.4.6
-numpy>=1.24.0
 
 # Text-to-speech (offline, OS-native voices)
 pyttsx3>=2.90

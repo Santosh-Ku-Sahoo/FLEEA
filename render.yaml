@@ -1,0 +1,27 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# FLEEA — Render Blueprint
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Defines the infrastructure for deploying FLEEA on Render.
+# Render auto-syncs this file on every push to master.
+
+services:
+  - type: web
+    name: fleea
+    runtime: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      cd web && npm install && npm run build
+    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.10"
+      - key: NODE_VERSION
+        value: "20"
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: FLASK_SECRET_KEY
+        generateValue: true

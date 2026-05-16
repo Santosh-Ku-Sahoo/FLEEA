@@ -54,8 +54,14 @@ from agent.session import SessionManager
 from config.settings import Settings
 from database.models import DatabaseManager
 from tools.tool_registry import build_default_registry
-from voice.stt import SpeechToText
-from voice.tts import TextToSpeech
+try:
+    from voice.stt import SpeechToText
+    from voice.tts import TextToSpeech
+    _VOICE = True
+except ImportError:
+    SpeechToText = None  # type: ignore[misc,assignment]
+    TextToSpeech = None  # type: ignore[misc,assignment]
+    _VOICE = False
 
 try:
     from memory.short_term import ShortTermMemory
@@ -149,8 +155,8 @@ def _get_or_create_backend() -> dict[str, Any]:
         vector_store=vector_store,
     )
     session = session_mgr.create_session()
-    stt = SpeechToText(model_size="small", language="en")
-    tts = TextToSpeech(rate=145, voice_index=1)
+    stt = SpeechToText(model_size="small", language="en") if _VOICE else None
+    tts = TextToSpeech(rate=145, voice_index=1) if _VOICE else None
     
     _backend = {
         "brain": brain, "session_mgr": session_mgr, "logger": logger,
@@ -333,9 +339,11 @@ def on_get_status():
             profile_data = {"name": p.get("name"), "preferences": p.get("preferences")}
 
         # Build hardware status
+        stt = backend.get("stt")
+        tts = backend.get("tts")
         status = {
-            "stt_available": backend["stt"].is_available(),
-            "tts_available": backend["tts"].is_available,
+            "stt_available": stt.is_available() if stt else False,
+            "tts_available": tts.is_available if tts else False,
             "brain_status": backend["brain"].get_status()
         }
 
