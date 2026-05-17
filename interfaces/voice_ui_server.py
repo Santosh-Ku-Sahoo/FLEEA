@@ -18,20 +18,31 @@ Usage:
 
 from __future__ import annotations
 
+import os
+# Optimizations: bypass heavy TensorFlow imports and disable HF telemetry to eliminate latency
+os.environ["USE_TF"] = "NO"
+os.environ["USE_TORCH"] = "YES"
+os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+
+
 # ── Async Monkey Patching (Must be FIRST) ──────────────────────────
 # Prefer gevent (cloud-friendly), fall back to eventlet (local dev).
-_async_mode = "threading"  # safe default
-try:
-    import gevent.monkey
-    gevent.monkey.patch_all()
-    _async_mode = "gevent"
-except ImportError:
+_async_mode = os.environ.get("FLEEA_ASYNC_MODE", "threading").strip().lower()
+if _async_mode not in {"threading", "gevent", "eventlet"}:
+    _async_mode = "threading"
+
+if _async_mode == "gevent":
+    try:
+        import gevent.monkey
+        gevent.monkey.patch_all()
+    except ImportError:
+        _async_mode = "threading"
+elif _async_mode == "eventlet":
     try:
         import eventlet
         eventlet.monkey_patch()
-        _async_mode = "eventlet"
     except ImportError:
-        pass  # will use threading mode
+        _async_mode = "threading"
 
 import asyncio
 import logging
@@ -115,6 +126,8 @@ def _push(status: str, **extra: str) -> None:
     _state["status"] = status
     _state.update(extra)
     sio.emit("state", {"status": status, **extra})
+    sio.sleep(0.05)  # Yield control to eventlet hub to immediately flush packets to browser
+
 
 
 @app.route("/", defaults={"path": ""})
@@ -149,6 +162,16 @@ def _get_or_create_backend() -> dict[str, Any]:
         try:
             persist_dir = str(Path(_PROJECT_ROOT) / "memory" / "chroma_db")
             vector_store = VectorStore(persist_dir=persist_dir)
+            
+            # Pre-warm vector store (loads embedding model in a background thread to prevent first-turn freeze)
+            def pre_warm():
+                _log.info("Pre-warming VectorStore (loading embedding model) in background...")
+                vector_store._ensure_initialized()
+                _log.info("VectorStore pre-warmed successfully!")
+            
+            from threading import Thread
+            Thread(target=pre_warm, name="VectorStorePrewarm", daemon=True).start()
+            
             retriever = MemoryRetriever(vector_store)
             profile_mgr = ProfileManager(db)
             short_term = ShortTermMemory(max_turns=10)
@@ -167,7 +190,7 @@ def _get_or_create_backend() -> dict[str, Any]:
         vector_store=vector_store,
     )
     session = session_mgr.create_session()
-    stt = SpeechToText(model_size="small", language="en") if _VOICE else None
+    stt = SpeechToText(model_size="base", language="en") if _VOICE else None
     tts = TextToSpeech(rate=145, voice_index=1) if _VOICE else None
     
     _backend = {
@@ -208,7 +231,7 @@ def _voice_loop(username: str = "User") -> None:
             text = ""
             for _ in range(2):
                 try:
-                    text = stt.listen(duration=5.0)
+                    text = stt.listen(duration=3.0)
                     break
                 except Exception:
                     pass
@@ -448,7 +471,7 @@ def admin_get_users():
 
 @app.route("/api/admin/users/<user_id>", methods=["DELETE"])
 def admin_delete_user(user_id):
-    logger.info(f"Admin request: Deleting user {user_id}")
+    _log.info(f"Admin request: Deleting user {user_id}")
     # Fetch user first to check role
     user = db_manager.authenticate_user(user_id)
     if not user:
@@ -492,9 +515,8 @@ def main() -> None:
     # Production eventlet monkey patch warning
     import warnings
     warnings.filterwarnings("ignore", module="werkzeug")
-    sio.run(app, host="0.0.0.0", port=port, debug=False, allow_unsafe_werkzeug=True)
+    sio.run(app, host="::", port=port, debug=False, allow_unsafe_werkzeug=True)
 
 
 if __name__ == "__main__":
     main()
-

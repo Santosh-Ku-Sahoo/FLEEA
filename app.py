@@ -10,4 +10,4 @@ For the CLI terminal REPL, run ``python cli.py`` instead.
 from interfaces.voice_ui_server import app  # noqa: F401
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=5050)
+    app.run(debug=False, host="::", port=5050)

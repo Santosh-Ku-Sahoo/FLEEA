@@ -279,7 +279,7 @@ Once the build is complete, you only need to run the backend:
 ```bash
 python -m interfaces.voice_ui_server
 ```
-The dashboard will be served at **http://127.0.0.1:5050** (recommended over `localhost` for Windows compatibility).
+The dashboard will be served at **http://localhost:5050** (both `localhost` and `127.0.0.1` work — the server binds in dual-stack IPv4+IPv6 mode).
 
 > [!IMPORTANT]
 > In production mode, the server uses `eventlet` for high-performance concurrent SocketIO connections. Ensure your `.env` file contains a strong `FLASK_SECRET_KEY`.
@@ -427,7 +427,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ### "Nothing Showing" (Black Screen) on Dashboard
 If you open the dashboard and see only a black screen or it fails to load:
 
-1. **Use 127.0.0.1 instead of localhost**: Windows often resolves `localhost` to IPv6 (`::1`), while the FLEEA backend binds to IPv4. Use **http://127.0.0.1:5050** explicitly.
+1. **Both URLs work**: The server binds to `::` (dual-stack), so both `http://localhost:5050` and `http://127.0.0.1:5050` are supported on Windows, macOS, and Linux.
 2. **Hard Refresh**: If you've just updated the code, your browser may have cached an old JS bundle. Press `Ctrl + F5` (Windows) or `Cmd + Shift + R` (Mac) to clear the cache.
 3. **Build the Frontend**: Ensure you have run `python scripts/deploy.py` or `npm run build` in the `web` directory so the `dist` folder exists.
 
