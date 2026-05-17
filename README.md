@@ -282,7 +282,7 @@ python -m interfaces.voice_ui_server
 The dashboard will be served at **http://localhost:5050** (both `localhost` and `127.0.0.1` work — the server binds in dual-stack IPv4+IPv6 mode).
 
 > [!IMPORTANT]
-> In production mode, the server uses `eventlet` for high-performance concurrent SocketIO connections. Ensure your `.env` file contains a strong `FLASK_SECRET_KEY`.
+> In production mode (like on Render), the server must use the `eventlet` worker class for Gunicorn to handle high-performance concurrent WebSocket connections and bypass HTTP polling load balancer issues. Example: `gunicorn --worker-class eventlet -w 1 ...`
 
 ---
 
@@ -430,6 +430,10 @@ If you open the dashboard and see only a black screen or it fails to load:
 1. **Both URLs work**: The server binds to `::` (dual-stack), so both `http://localhost:5050` and `http://127.0.0.1:5050` are supported on Windows, macOS, and Linux.
 2. **Hard Refresh**: If you've just updated the code, your browser may have cached an old JS bundle. Press `Ctrl + F5` (Windows) or `Cmd + Shift + R` (Mac) to clear the cache.
 3. **Build the Frontend**: Ensure you have run `python scripts/deploy.py` or `npm run build` in the `web` directory so the `dist` folder exists.
+
+### Chat Input Doesn't Work on Render (WebSocket Closed)
+If you deploy to Render and the chat interface stays stuck on "READY" when you type a message (and you see a `WebSocket connection to ... failed` error in the browser console):
+1. **Check `render.yaml`**: Ensure your start command uses the `eventlet` worker class for Gunicorn (`gunicorn --worker-class eventlet -w 1 ...`), NOT `gevent`. The `gevent` worker will instantly reject WebSocket upgrades unless you use a specialized websocket worker class.
 
 ### Audio / Voice Issues
 - **STT**: Ensure you have a working microphone and have granted permissions in your OS.
