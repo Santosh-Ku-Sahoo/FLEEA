@@ -322,6 +322,7 @@ def on_text_chat(data: dict[str, Any]):
             backend = _get_or_create_backend()
             brain: FLEEABrain = backend["brain"]
             response = asyncio.run(brain.think(text))
+            _push("speaking", transcript=text, response=response)
             _push("idle", transcript=text, response=response)
             
             # Broadcast updated system status after a turn

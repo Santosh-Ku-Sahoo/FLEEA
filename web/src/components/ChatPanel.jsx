@@ -38,9 +38,12 @@ export function ChatPanel({ state, onSendText, onClose }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, state.transcript, state.response]);
 
-  // Handle incoming voice events
+  // Handle incoming responses (voice, text chat, and errors)
   useEffect(() => {
-    if (state.status === 'speaking' && state.transcript && state.response) {
+    // Capture responses from any non-thinking state that has both transcript and response
+    const isTerminalState = state.status === 'speaking' || state.status === 'idle' || state.status === 'error';
+    
+    if (isTerminalState && state.transcript && state.response) {
       // Use ref to prevent duplicate processing of the same response
       if (lastProcessedResponse.current === state.response) return;
       lastProcessedResponse.current = state.response;
@@ -50,8 +53,6 @@ export function ChatPanel({ state, onSendText, onClose }) {
         { id: Date.now() + 'u', role: 'user', content: state.transcript },
         { id: Date.now() + 'a', role: 'assistant', content: state.response }
       ]);
-    } else if (state.status === 'idle') {
-      lastProcessedResponse.current = null;
     }
   }, [state.status, state.transcript, state.response]);
 
