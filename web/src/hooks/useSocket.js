@@ -67,8 +67,9 @@ export function useSocket() {
       recognitionRef.current = recognition;
     }
 
-    // Vite proxy handles /socket.io
-    socketRef.current = io();
+    // Vite proxy handles /socket.io in dev, Render handles it in prod.
+    // Force websocket transport to bypass Render load balancer polling issues
+    socketRef.current = io({ transports: ['websocket'], upgrade: false });
 
     socketRef.current.on('connect', () => {
       console.log('Connected to FLEEA Voice UI');
